@@ -1,5 +1,0 @@
-package com.ecommerce.apigateway.error;
-
-public record GatewayErrorResponse() {
-
-}

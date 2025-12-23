@@ -1,5 +1,0 @@
-package com.ecommerce.inventoryservice.config;
-
-public class SecurityConfig {
-
-}

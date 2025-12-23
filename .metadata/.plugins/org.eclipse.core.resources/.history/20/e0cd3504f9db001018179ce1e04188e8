@@ -1,9 +1,0 @@
-package com.ecommerce.orderservice.client;
-
-import com.ecommerce.orderservice.dto.InventoryResponse;
-import reactor.core.publisher.Mono;
-
-public interface InventoryClient {
-    Mono<InventoryResponse> decrease(Long productId, Integer qty, Long storeId);
-    Mono<InventoryResponse> increase(Long productId, Integer qty, Long storeId);
-}

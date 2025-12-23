@@ -1,5 +1,0 @@
-package com.ecommerce.orderservice.dto;
-
-public record InventoryReserveRequest() {
-
-}

@@ -1,7 +1,0 @@
-package com.ecommerce.apigateway.constants;
-
-public enum GatewayStatus {
-    DOWN,
-    UP,
-    DEGRADED
-}

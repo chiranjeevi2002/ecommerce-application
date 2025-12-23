@@ -1,5 +1,0 @@
-package com.ecommerce.paymentservice.config;
-
-public class SecurityConfig {
-
-}
