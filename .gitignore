@@ -1,0 +1,17 @@
+# Backend (Java/Spring Boot)
+target/
+*.class
+*.jar
+*.war
+
+# Frontend (Node/React)
+node_modules/
+build/
+dist/
+.env
+
+# IDE files
+.idea/
+*.iml
+.project
+.classpath

@@ -1,0 +1,33 @@
+/* RESET problematic Vite defaults and let Bootstrap control layout */
+
+/* Remove flex centering from Vite starter template */
+body {
+  margin: 0;
+  padding: 0;
+  background: #f8f9fa; /* Light background */
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Ensure root takes full width */
+#root {
+  width: 100%;
+  height: auto;
+}
+
+/* Remove Vite forced dark theme and fonts */
+:root {
+  color-scheme: light;
+  background-color: #fff;
+}
+
+/* Links general styling - Bootstrap handles hover */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Buttons - allow Bootstrap to control them */
+button {
+  font-family: inherit;
+}

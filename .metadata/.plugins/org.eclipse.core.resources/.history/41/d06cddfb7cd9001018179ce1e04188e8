@@ -1,0 +1,36 @@
+package com.ecommerce.apigateway.model;
+
+import java.time.LocalDateTime;
+
+import com.ecommerce.apigateway.constants.GatewayStatus;
+
+public class GatewayErrorResponse {
+
+    private LocalDateTime timestamp;
+    private String service;
+    private GatewayStatus status;
+    private String errorCode;
+    private String message;
+    private String traceId;
+
+    public GatewayErrorResponse(String service,
+                                GatewayStatus status,
+                                String errorCode,
+                                String message,
+                                String traceId) {
+
+        this.timestamp = LocalDateTime.now();
+        this.service = service;
+        this.status = status;
+        this.errorCode = errorCode;
+        this.message = message;
+        this.traceId = traceId;
+    }
+
+    public LocalDateTime getTimestamp() { return timestamp; }
+    public String getService() { return service; }
+    public GatewayStatus getStatus() { return status; }
+    public String getErrorCode() { return errorCode; }
+    public String getMessage() { return message; }
+    public String getTraceId() { return traceId; }
+}

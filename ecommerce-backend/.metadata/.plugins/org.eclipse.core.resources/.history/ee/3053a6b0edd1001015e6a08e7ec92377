@@ -1,0 +1,28 @@
+package com.ecommerce.userservice.controller;
+
+package com.ecommerce.userservice.web.admin;
+
+import com.ecommerce.userservice.dto.RoleSummary;
+import com.ecommerce.userservice.service.admin.UserAdminService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/admin")
+@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_SUPERADMIN')")
+public class RolesController {
+
+    private final UserAdminService adminService;
+
+    public RolesController(UserAdminService adminService) {
+        this.adminService = adminService;
+    }
+
+    @GetMapping("/roles")
+    public ResponseEntity<List<RoleSummary>> allRoles() {
+        return ResponseEntity.ok(adminService.listAllRoles());
+    }
+}

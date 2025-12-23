@@ -1,0 +1,42 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: inventoryservice
+  datasource:
+#    url: jdbc:h2:mem:inventorydb
+    url: jdbc:h2:file:D:/workspace/services/ecommerce/ecommerce-backend/main;AUTO_SERVER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  output:
+    ansi:
+      enabled: ALWAYS
+
+logging:
+  file:
+    name: logs/inventoryservice.log
+  pattern:
+    console: "%clr([%d{yyyy-MM-dd HH:mm:ss}]){faint} %highlight([%-5level]){FATAL=magenta blink, ERROR=red bold, WARN=yellow bold, INFO=green, DEBUG=cyan, TRACE=magenta} %clr([%X{service}]){magenta} %clr([%logger{36}:%L]){blue} - %clr(%msg){bright_white}%n"
+    file: "[%d{yyyy-MM-dd HH:mm:ss}] [%-5level] [%X{service}] [%logger{36}:%L] - %msg%n"
+  level:
+    root: INFO
+    com.ecommerce.inventory: DEBUG
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+
+springdoc:
+  swagger-ui:
+    enabled: false   # UI disabled at each service
+  api-docs:
+    path: /v3/api-docs	

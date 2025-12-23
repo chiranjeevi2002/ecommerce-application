@@ -1,0 +1,10 @@
+package com.ecommerce.orderservice.client;
+
+import com.ecommerce.orderservice.dto.ProductResponse;
+
+import reactor.core.publisher.Mono;
+
+public interface ProductClient {
+    Mono<ProductResponse> getProduct(Long productId, Long storeId);
+    void checkProduct(Long productId, Long storeId); // throws if not exist
+}

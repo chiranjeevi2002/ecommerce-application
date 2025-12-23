@@ -1,0 +1,61 @@
+package com.ecommerce.common.webflux.security;
+
+import java.util.List;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.context.SecurityContext;
+
+import com.ecommerce.common.webflux.context.ReactiveContextHolder;
+import com.ecommerce.common.webflux.context.ReactiveRequestContext;
+
+import reactor.core.publisher.Mono;
+
+public final class ReactiveSecurityContextAdapter {
+
+    private ReactiveSecurityContextAdapter() {
+    }
+
+    public static Mono<ReactiveRequestContext> currentContext() {
+
+        return ReactiveContextHolder.get()
+                .flatMap(ReactiveSecurityContextAdapter::enrichFromSecurityContext);
+    }
+
+    private static Mono<ReactiveRequestContext> enrichFromSecurityContext(
+            ReactiveRequestContext existingContext
+    ) {
+
+        return ReactiveSecurityContextHolder.getContext()
+                .map(SecurityContext::getAuthentication)
+                .map(auth -> enrich(existingContext, auth))
+                .defaultIfEmpty(existingContext);
+    }
+
+    private static ReactiveRequestContext enrich(
+            ReactiveRequestContext existing,
+            Authentication auth
+    ) {
+
+        if (auth == null || !auth.isAuthenticated()) {
+            return existing;
+        }
+
+        return new ReactiveRequestContext(
+                existing.userId(),
+                existing.storeId(),
+                auth.getName(),
+                extractRoles(auth),
+                existing.authorization(),
+                existing.traceId()
+        );
+    }
+
+    private static List<String> extractRoles(Authentication auth) {
+        return auth.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+    }
+}

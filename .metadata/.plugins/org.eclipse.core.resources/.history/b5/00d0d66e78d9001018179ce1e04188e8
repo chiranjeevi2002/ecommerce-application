@@ -1,0 +1,9 @@
+package com.ecommerce.apigateway.dto;
+
+import java.util.Set;
+
+public record GatewayUserContext(
+        Long userId,
+        String username,
+        Set<String> roles
+) {}

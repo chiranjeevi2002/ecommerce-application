@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: apigateway
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    com.ecommerce.apigateway: DEBUG

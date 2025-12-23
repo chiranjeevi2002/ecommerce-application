@@ -1,0 +1,35 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: eurekaserver
+  output:
+    ansi:
+      enabled: ALWAYS
+
+logging:
+  file:
+    name: logs/eurekaserver.log
+  pattern:
+    console: "%clr([%d{yyyy-MM-dd HH:mm:ss}]){faint} %highlight([%-5level]){FATAL=magenta blink, ERROR=red bold, WARN=yellow bold, INFO=green, DEBUG=cyan, TRACE=magenta} %clr([%X{service}]){magenta} %clr([%logger{36}:%L]){blue} - %clr(%msg){bright_white}%n"
+    file: "[%d{yyyy-MM-dd HH:mm:ss}] [%-5level] [%X{service}] [%logger{36}:%L] - %msg%n"
+  level:
+    root: INFO
+    com.ecommerce.eureka: DEBUG
+
+
+eureka:
+  client:
+    
+    healthcheck:
+      enabled: true
+    register-with-eureka: false
+    fetch-registry: false
+  dashboard:
+    showOnlyUpInstances: false
+  # server:
+    # enable-self-preservation: false #temp
+  #   eviction-interval-timer-in-ms: 20000 
+
+

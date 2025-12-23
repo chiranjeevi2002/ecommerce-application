@@ -1,0 +1,26 @@
+package com.ecommerce.orderservice.service.workflow;
+
+
+import com.ecommerce.common.workflow.OrderWorkflowStep;
+
+public final class WorkflowLogger {
+
+    private WorkflowLogger() {
+    }
+
+    public static void stepStarted(OrderWorkflowStep step) {
+        System.out.println("[WORKFLOW] Step started : " + step);
+    }
+
+    public static void stepCompleted(OrderWorkflowStep step) {
+        System.out.println("[WORKFLOW] Step completed : " + step);
+    }
+
+    public static void stepFailed(OrderWorkflowStep step, Throwable error) {
+        System.out.println("[WORKFLOW] Step failed : " + step + " | reason=" + error.getMessage());
+    }
+
+    public static void stepCompensated(OrderWorkflowStep step) {
+        System.out.println("[WORKFLOW] Step compensated : " + step);
+    }
+}

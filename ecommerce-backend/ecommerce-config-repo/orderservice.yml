@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: orderservice
+
+logging:
+  level:
+    com.ecommerce.orders: DEBUG

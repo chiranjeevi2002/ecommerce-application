@@ -1,0 +1,16 @@
+package com.ecommerce.userservice.service;
+
+
+import com.ecommerce.userservice.dto.JwtResponse;
+import com.ecommerce.userservice.dto.LoginRequest;
+import com.ecommerce.userservice.dto.RegisterRequest;
+import com.ecommerce.userservice.dto.UserResponse;
+
+public interface UserService {
+    UserResponse register(RegisterRequest request);
+    JwtResponse login(LoginRequest request);
+    UserResponse getByUserIdAndStoreId(Long userId, Long storeId);
+
+//    UserResponse getByUsername(String username);
+}
+

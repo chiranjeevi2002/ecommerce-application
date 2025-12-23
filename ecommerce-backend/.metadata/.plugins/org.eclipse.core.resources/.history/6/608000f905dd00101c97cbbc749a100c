@@ -1,0 +1,44 @@
+@Service
+public class OrderDomainServiceImpl implements OrderDomainService {
+
+    private final OrderRepository orderRepository;
+
+    public OrderDomainServiceImpl(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+
+    @Override
+    @Transactional
+    public Order create(OrderDTO dto, Long userId, Long storeId) {
+        Order order = new Order();
+        order.setUserId(userId);
+        order.setStoreId(storeId);
+        order.setStatus(OrderStatus.PENDING);
+
+        order.setItems(dto.items().stream().map(item -> {
+            OrderItem oi = new OrderItem();
+            oi.setProductId(item.productId());
+            oi.setQuantity(item.quantity());
+            oi.setPrice(item.price());
+            oi.setStoreId(storeId);
+            oi.attach(order);
+            return oi;
+        }).toList());
+
+        return orderRepository.save(order);
+    }
+
+    @Override
+    @Transactional
+    public Order updateStatus(Long orderId, Long storeId, OrderStatus status) {
+        Order order = get(orderId, storeId);
+        order.setStatus(status);
+        return orderRepository.save(order);
+    }
+
+    @Override
+    public Order get(Long orderId, Long storeId) {
+        return orderRepository.findByIdAndStoreId(orderId, storeId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+    }
+}

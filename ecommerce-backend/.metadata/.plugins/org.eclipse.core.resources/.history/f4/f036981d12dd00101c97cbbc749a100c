@@ -1,0 +1,60 @@
+package com.ecommerce.common.webflux.webclient;
+
+
+import org.springframework.web.reactive.function.client.ClientRequest;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
+
+import com.ecommerce.common.context.RequestHeaders;
+import com.ecommerce.common.webflux.context.ReactiveContextHolder;
+import com.ecommerce.common.webflux.context.ReactiveRequestContext;
+
+public final class RequestContextWebClientFilter {
+
+    private RequestContextWebClientFilter() {
+    }
+
+    public static ExchangeFilterFunction propagateContext() {
+
+        return (request, next) ->
+                ReactiveContextHolder.get()
+                        .defaultIfEmpty(null)
+                        .flatMap(ctx -> next.exchange(enrichRequest(request, ctx)));
+    }
+
+    private static ClientRequest enrichRequest(
+            ClientRequest request,
+            ReactiveRequestContext ctx
+    ) {
+
+        if (ctx == null) {
+            return request;
+        }
+
+        ClientRequest.Builder builder = ClientRequest.from(request);
+
+        if (ctx.traceId() != null) {
+            builder.header(RequestHeaders.TRACE_ID, ctx.traceId());
+        }
+        if (ctx.userId() != null) {
+            builder.header(RequestHeaders.USER_ID, ctx.userId().toString());
+        }
+        if (ctx.storeId() != null) {
+            builder.header(RequestHeaders.STORE_ID, ctx.storeId().toString());
+        }
+        if (ctx.username() != null) {
+            builder.header(RequestHeaders.USERNAME, ctx.username());
+        }
+        if (ctx.roles() != null && !ctx.roles().isEmpty()) {
+            builder.header(
+            		RequestHeaders.USER_ROLES,
+                    String.join(",", ctx.roles())
+            );
+        }
+        if (ctx.authorization() != null) {
+            builder.header(RequestHeaders.AUTHORIZATION, ctx.authorization());
+        }
+
+        return builder.build();
+    }
+}
+

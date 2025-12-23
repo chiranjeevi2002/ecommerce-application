@@ -1,0 +1,5 @@
+package com.ecommerce.productservice.security;
+
+public class HeaderAuthFilter {
+
+}

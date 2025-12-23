@@ -1,0 +1,14 @@
+package com.ecommerce.apigateway.constants;
+
+public final class GatewayErrorCodes {
+
+    private GatewayErrorCodes() {}
+
+    public static final String SERVICE_UNAVAILABLE = "SERVICE_UNAVAILABLE";
+    public static final String RATE_LIMITED = "RATE_LIMITED";
+    public static final String TIMEOUT = "TIMEOUT";
+    public static final String CIRCUIT_OPEN = "CIRCUIT_OPEN";
+    public static final String JWT_INVALID = "JWT_INVALID";
+    public static final String JWT_MISSING = "JWT_MISSING";
+    public static final String BAD_REQUEST = "BAD_REQUEST";
+}

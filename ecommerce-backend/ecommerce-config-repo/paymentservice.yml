@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: paymentservice
+
+logging:
+  level:
+    com.ecommerce.payment: DEBUG

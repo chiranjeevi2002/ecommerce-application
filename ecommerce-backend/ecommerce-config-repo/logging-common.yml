@@ -1,0 +1,8 @@
+logging:
+  pattern:
+    console: "%clr([%d{yyyy-MM-dd HH:mm:ss}]){faint} %clr([%-5level]){blue} %clr([%X{service}]){green} %clr([traceId=%X{traceId} spanId=%X{spanId} reqId=%X{requestId} user=%X{userId}]){magenta} %clr([%logger{36}:%line]){cyan} - %msg%n"
+
+    file: "[%d{yyyy-MM-dd HH:mm:ss}] [%level] [%X{service}] [traceId=%X{traceId}] [spanId=%X{spanId}] [reqId=%X{requestId}] [user=%X{userId}] [%logger{36}:%line] - %msg%n"
+
+  level:
+    root: INFO

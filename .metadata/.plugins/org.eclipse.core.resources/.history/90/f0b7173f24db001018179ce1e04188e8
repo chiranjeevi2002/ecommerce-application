@@ -1,0 +1,75 @@
+package com.ecommerce.orderservice.controller;
+
+import com.ecommerce.common.security.SecurityConstants;
+import com.ecommerce.common.security.annotations.OrderCreate;
+import com.ecommerce.common.security.annotations.OrderRead;
+import com.ecommerce.common.security.annotations.OrderWrite;
+import com.ecommerce.orderservice.dto.OrderDTO;
+import com.ecommerce.orderservice.model.Order;
+import com.ecommerce.orderservice.service.OrderDomainService;
+import com.ecommerce.orderservice.service.OrderWorkflowService;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import reactor.core.publisher.Mono;
+
+@RestController
+@RequestMapping(SecurityConstants.ORDERS_BASE)
+public class OrderController {
+
+	private final OrderWorkflowService workflowService;
+	private final OrderDomainService domainService;
+
+	public OrderController(OrderWorkflowService workflowService, OrderDomainService domainService) {
+		this.workflowService = workflowService;
+		this.domainService = domainService;
+	}
+
+	@GetMapping("/ping")
+	public String ping() {
+		return "orderservice-up";
+	}
+
+	/**
+	 * CUSTOMER creates order ADMIN/SUPERADMIN can also create
+	 */
+	@OrderCreate
+	@PostMapping
+	public Mono<ResponseEntity<Order>> createOrder(@RequestHeader("X-Store-Id") Long storeId,
+			@RequestHeader("X-User-Id") Long userId, @RequestBody OrderDTO dto) {
+
+		return workflowService.createOrder(userId, storeId, dto)
+				.map(order -> ResponseEntity.status(HttpStatus.CREATED).body(order));
+	}
+
+	/**
+	 * CUSTOMER → can read own orders ADMIN / ORDER_MANAGER → can read any store
+	 * order
+	 */
+	@OrderRead
+	@GetMapping("/{id}")
+	public ResponseEntity<Order> getOrder(@RequestHeader("X-Store-Id") Long storeId,
+			@RequestHeader("X-User-Id") Long userId, @PathVariable Long id) {
+
+		Order order = domainService.get(id, storeId);
+
+		if (!order.getUserId().equals(userId)) {
+			throw new org.springframework.security.access.AccessDeniedException("Cannot access other user's order");
+		}
+
+		return ResponseEntity.ok(order);
+	}
+
+	/**
+	 * Called by PaymentService Not exposed to CUSTOMER directly
+	 */
+	@OrderWrite
+	@PostMapping("/{id}/payment/callback")
+	public Mono<ResponseEntity<Order>> finalizePayment(@RequestHeader("X-Store-Id") Long storeId, @PathVariable Long id,
+			@RequestParam boolean success) {
+
+		return workflowService.finalizePayment(id, storeId, success).map(ResponseEntity::ok);
+	}
+}

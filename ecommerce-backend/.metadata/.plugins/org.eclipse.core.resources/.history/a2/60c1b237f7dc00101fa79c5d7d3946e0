@@ -1,0 +1,15 @@
+package com.ecommerce.common.web.service;
+
+public interface GenericService<T, ID> {
+
+    T getById(ID id);
+
+    Page<T> getAll(Pageable pageable);
+
+    T create(T dto);
+
+    T update(ID id, T dto);
+
+    void delete(ID id);
+}
+

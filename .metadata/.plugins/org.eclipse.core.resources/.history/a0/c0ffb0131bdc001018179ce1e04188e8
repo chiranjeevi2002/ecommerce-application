@@ -1,0 +1,185 @@
+package com.ecommerce.productservice.service.impl;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ecommerce.productservice.dto.ProductDTO;
+import com.ecommerce.productservice.dto.ProductResponse;
+import com.ecommerce.productservice.dto.ProductValidationResponse;
+import com.ecommerce.productservice.model.Category;
+import com.ecommerce.productservice.model.Product;
+import com.ecommerce.productservice.model.ProductImage;
+import com.ecommerce.productservice.repository.CategoryRepository;
+import com.ecommerce.productservice.repository.ProductImageRepository;
+import com.ecommerce.productservice.repository.ProductRepository;
+import com.ecommerce.productservice.service.ProductService;
+
+@Service
+@Transactional
+public class ProductServiceImpl implements ProductService {
+
+	@FunctionalInterface
+	interface ProductPageFetcher {
+		Page<Product> fetch(PageRequest pageRequest);
+	}
+
+	private final ProductRepository productRepository;
+	private final CategoryRepository categoryRepository;
+	private final ProductImageRepository imageRepository;
+
+	private final Function<Product, ProductResponse> toResponse = product -> {
+		var images = Optional.ofNullable(product.getImages()).orElse(List.of()).stream().map(ProductImage::getImageUrl)
+				.toList();
+
+		return new ProductResponse(product.getId(), product.getName(), product.getDescription(), product.getPrice(),
+				product.getQuantity(), product.getCategory().getId(), product.getCategory().getName(),
+				product.getStoreId(), images, product.getCreatedAt());
+	};
+
+	public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository,
+			ProductImageRepository imageRepository) {
+		this.productRepository = productRepository;
+		this.categoryRepository = categoryRepository;
+		this.imageRepository = imageRepository;
+	}
+
+	@Override
+	public ProductResponse createProduct(ProductDTO dto, Long storeId) {
+		var category = findCategory(dto.categoryId(), storeId);
+
+		var product = new Product();
+		product.setName(dto.name());
+		product.setDescription(dto.description());
+		product.setPrice(dto.price());
+		product.setQuantity(dto.quantity());
+		product.setStoreId(storeId);
+		product.setCategory(category);
+
+		var saved = productRepository.save(product);
+
+		replaceImages(saved, dto.imageUrls(), storeId);
+
+		return toResponse.apply(saved);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public ProductResponse getProduct(Long id, Long storeId) {
+		return toResponse.apply(findProduct(id, storeId));
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<ProductResponse> getProductsByStore(Long storeId) {
+		return productRepository.findByStoreId(storeId).stream().map(toResponse).toList();
+	}
+
+	@Override
+	public ProductResponse updateProduct(Long id, ProductDTO dto, Long storeId) {
+		var product = findProduct(id, storeId);
+		var category = findCategory(dto.categoryId(), storeId);
+
+		product.setName(dto.name());
+		product.setDescription(dto.description());
+		product.setPrice(dto.price());
+		product.setQuantity(dto.quantity());
+		product.setCategory(category);
+
+		replaceImages(product, dto.imageUrls(), storeId);
+
+		var saved = productRepository.save(product);
+		return toResponse.apply(saved);
+	}
+
+	@Override
+	public void deleteProduct(Long id, Long storeId) {
+		var product = findProduct(id, storeId);
+
+		imageRepository.deleteByProductId(product.getId());
+		productRepository.delete(product);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Page<ProductResponse> getProductsByStore(Long storeId, int page, int size, String sortBy, String direction) {
+		return fetchPage(storeId, null, page, size, sortBy, direction);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Page<ProductResponse> searchProducts(Long storeId, String keyword, int page, int size, String sortBy,
+			String direction) {
+		return fetchPage(storeId, keyword, page, size, sortBy, direction);
+	}
+
+	@Override
+	public List<ProductValidationResponse> validateProducts(Long storeId, List<Long> productIds) {
+		 var productIdsList = productRepository.findValidProductIds(productIds, storeId);
+	                          ;
+	}
+
+	private Page<ProductResponse> fetchPage(Long storeId, String keyword, int page, int size, String sortBy,
+			String direction) {
+		var safePage = Math.max(page, 0);
+		var safeSize = Math.max(size, 1);
+		var sort = resolveSort(sortBy, direction);
+
+		var pageable = PageRequest.of(safePage, safeSize, sort);
+
+		ProductPageFetcher fetcher = (keyOrNull(keyword) == null) ? pr -> productRepository.findByStoreId(storeId, pr)
+				: pr -> productRepository.searchByStoreAndNameOrCategory(storeId, keyOrNull(keyword), pr);
+
+		return fetcher.fetch(pageable).map(toResponse);
+	}
+
+	private Sort resolveSort(String sortBy, String direction) {
+		var dir = switch (direction == null ? "" : direction.toUpperCase()) {
+		case "ASC" -> Sort.Direction.ASC;
+		default -> Sort.Direction.DESC;
+		};
+
+		var property = "createdAt";
+		return Sort.by(dir, property);
+	}
+
+	private String keyOrNull(String keyword) {
+		var trimmed = Optional.ofNullable(keyword).map(String::trim).orElse("");
+		return trimmed.isEmpty() ? null : trimmed;
+	}
+
+	private Category findCategory(Long categoryId, Long storeId) {
+		return categoryRepository.findByIdAndStoreId(categoryId, storeId)
+				.orElseThrow(() -> new RuntimeException("Category not found for this store"));
+	}
+
+	private Product findProduct(Long productId, Long storeId) {
+		return productRepository.findByIdAndStoreId(productId, storeId)
+				.orElseThrow(() -> new RuntimeException("Product not found for this store"));
+	}
+
+	private void replaceImages(Product product, List<String> imageUrls, Long storeId) {
+		product.getImages().clear();
+
+		if (imageUrls == null || imageUrls.isEmpty()) {
+			return;
+		}
+
+		var images = imageUrls.stream().filter(url -> url != null && !url.isBlank()).map(url -> {
+			var img = new ProductImage();
+			img.setProduct(product);
+			img.setStoreId(storeId);
+			img.setImageUrl(url);
+			img.setSortOrder(0);
+			return img;
+		}).toList();
+
+		product.getImages().addAll(images);
+	}
+}

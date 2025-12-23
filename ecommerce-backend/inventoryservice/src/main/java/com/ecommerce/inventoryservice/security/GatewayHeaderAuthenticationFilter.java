@@ -1,0 +1,57 @@
+package com.ecommerce.inventoryservice.security;
+
+import java.io.IOException;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.lang.NonNull;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.ecommerce.common.security.AuthHeaderExtractor;
+import com.ecommerce.common.security.SecurityHeaders;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+@Component
+public class GatewayHeaderAuthenticationFilter extends OncePerRequestFilter {
+
+    @Override
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain
+    ) throws ServletException, IOException {
+
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String username = request.getHeader(SecurityHeaders.USERNAME);
+        String rolesHdr = request.getHeader(SecurityHeaders.ROLES);
+
+        if (username == null || rolesHdr == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        Set<SimpleGrantedAuthority> authorities =
+                AuthHeaderExtractor.extractRoles(rolesHdr)
+                        .stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toSet());
+
+        UsernamePasswordAuthenticationToken auth =
+                new UsernamePasswordAuthenticationToken(username, null, authorities);
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        filterChain.doFilter(request, response);
+    }
+}
+

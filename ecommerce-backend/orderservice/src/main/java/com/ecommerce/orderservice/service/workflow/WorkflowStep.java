@@ -1,0 +1,10 @@
+package com.ecommerce.orderservice.service.workflow;
+
+
+import reactor.core.publisher.Mono;
+
+@FunctionalInterface
+public interface WorkflowStep {
+
+    Mono<WorkflowContext> execute(WorkflowContext context);
+}

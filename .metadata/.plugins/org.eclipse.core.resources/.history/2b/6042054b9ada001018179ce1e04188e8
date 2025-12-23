@@ -1,0 +1,13 @@
+package com.ecommerce.common.security;
+
+public final class PublicPaths {
+
+    private PublicPaths() {}
+
+    public static final String[] USER_SERVICE = {
+        SecurityConstants.AUTH_BASE,   // /api/v1/auth
+        SecurityConstants.ACTUATOR,    // /actuator/**
+        "/v3/api-docs"                 // swagger
+    };
+}
+

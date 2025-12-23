@@ -1,0 +1,30 @@
+package com.ecommerce.orderservice.client.impl;
+
+
+import com.ecommerce.orderservice.client.PaymentClient;
+import com.ecommerce.orderservice.dto.PaymentRequest;
+import com.ecommerce.orderservice.dto.PaymentResponse;
+import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
+@Component
+public class PaymentClientImpl implements PaymentClient {
+
+    private final WebClient webClient;
+
+    public PaymentClientImpl(WebClient webClient) {
+        this.webClient = webClient;
+    }
+
+    @Override
+    public Mono<PaymentResponse> initiatePayment(Long orderId, Long userId, Double amount, Long storeId) {
+        PaymentRequest req = new PaymentRequest(orderId, userId, amount, "ONLINE", storeId);
+        return webClient.post()
+                .uri("http://paymentservice/payments")
+                .header("X-Store-Id", String.valueOf(storeId))
+                .bodyValue(req)
+                .retrieve()
+                .bodyToMono(PaymentResponse.class);
+    }
+}

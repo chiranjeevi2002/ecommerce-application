@@ -1,0 +1,46 @@
+package com.ecommerce.common.webflux.controller;
+
+import com.ecommerce.common.webflux.pagination.PageResponse;
+import com.ecommerce.common.webflux.service.ReactiveGenericService;
+
+import jakarta.validation.Valid;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import reactor.core.publisher.Mono;
+
+public abstract class ReactiveGenericController<T, ID> {
+
+    protected abstract ReactiveGenericService<T, ID> service();
+
+    @GetMapping("/{id}")
+    public Mono<T> getById(@PathVariable ID id) {
+        return service().getById(id);
+    }
+
+    @GetMapping
+    public Mono<PageResponse<T>> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return service().getAll(page, size);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mono<T> create(@RequestBody @Valid T dto) {
+        return service().create(dto);
+    }
+
+    @PutMapping("/{id}")
+    public Mono<T> update(@PathVariable ID id, @RequestBody @Valid T dto) {
+        return service().update(id, dto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> delete(@PathVariable ID id) {
+        return service().delete(id);
+    }
+}

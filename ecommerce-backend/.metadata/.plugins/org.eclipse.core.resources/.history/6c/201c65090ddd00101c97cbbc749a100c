@@ -1,0 +1,9 @@
+package com.ecommerce.common.workflow;
+
+import com.ecommerce.common.core.workflow.OrderWorkflowStep;
+
+public record WorkflowDefinition(
+        OrderWorkflowStep step,
+        WorkflowStep action,
+        CompensationStep compensation
+) {}

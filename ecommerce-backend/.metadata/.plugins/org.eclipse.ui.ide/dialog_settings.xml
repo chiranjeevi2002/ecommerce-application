@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<list key="installedFeatures">
+		<item value="org.eclipse.buildship:3.1.10.v20240802-1314"/>
+		<item value="org.eclipse.egit.gitflow.feature:7.4.0.202509020913-r"/>
+		<item value="org.eclipse.egit:7.4.0.202509020913-r"/>
+		<item value="org.eclipse.epp.mpc:1.13.0.v20250816-1241"/>
+		<item value="org.eclipse.help:2.3.2300.v20250905-0730"/>
+		<item value="org.eclipse.jdt:3.20.300.v20250905-1111"/>
+		<item value="org.eclipse.jgit.gpg.bc:7.4.0.202509020913-r"/>
+		<item value="org.eclipse.jgit.http.apache:7.4.0.202509020913-r"/>
+		<item value="org.eclipse.jgit.lfs:7.4.0.202509020913-r"/>
+		<item value="org.eclipse.jgit.ssh.apache:7.4.0.202509020913-r"/>
+		<item value="org.eclipse.jgit:7.4.0.202509020913-r"/>
+		<item value="org.eclipse.jst.common.fproj.enablement.jdt:3.39.0.v202508180233"/>
+		<item value="org.eclipse.justj.openjdk.hotspot.jre.full:21.0.8.v20250724-1412"/>
+		<item value="org.eclipse.m2e.feature:2.9.1.20250811-2022"/>
+		<item value="org.eclipse.m2e.logback.feature:2.7.100.20250418-1315"/>
+		<item value="org.eclipse.m2e.wtp.feature:1.6.1.20231024-1618"/>
+		<item value="org.eclipse.mylyn.wikitext.feature:4.8.0.v20250823-0814"/>
+		<item value="org.eclipse.pde:3.16.400.v20250905-0730"/>
+		<item value="org.eclipse.platform:4.37.0.v20250905-0730"/>
+		<item value="org.eclipse.rcp:4.37.0.v20250905-0730"/>
+		<item value="org.eclipse.wst.common.fproj:3.39.0.v202508180233"/>
+		<item value="org.jboss.tools.m2e.wro4j.feature:1.2.1.202301111328"/>
+		<item value="org.sonatype.m2e.egit.feature:0.17.0.202209271423"/>
+	</list>
+	<section name="org.eclipse.ui.dialogs.FilteredResourcesSelectionDialog">
+		<item key="ShowStatusLine" value="true"/>
+		<item key="History" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0D;&#x0A;&lt;History&gt;&#x0D;&#x0A;&lt;historyRootNode&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/paymentservice/src/main/java/com/ecommerce/paymentservice/controller/PaymentController.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/apigateway/src/main/java/com/ecommerce/apigateway/config/CorsGlobalConfig.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/eurekaserver/src/main/resources/application.yml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/userservice/src/main/java/com/ecommerce/userservice/model/Role.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/userservice/src/main/java/com/ecommerce/userservice/model/User.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/userservice/src/main/java/com/ecommerce/userservice/dto/UserResponse.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/userservice/pom.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/userservice/src/main/java/com/ecommerce/userservice/repository/RoleRepository.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/userservice/src/main/java/com/ecommerce/userservice/repository/UserRepository.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/userservice/src/main/java/com/ecommerce/userservice/dto/RoleSummary.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/userservice/src/main/java/com/ecommerce/userservice/service/admin/UserAdminService.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/userservice/src/main/java/com/ecommerce/userservice/service/admin/impl/UserAdminServiceImpl.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/productservice/src/main/java/com/ecommerce/productservice/dto/ProductDTO.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/orderservice/src/main/java/com/ecommerce/orderservice/dto/ProductResponse.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/productservice/src/main/java/com/ecommerce/productservice/service/ProductService.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/productservice/src/main/java/com/ecommerce/productservice/service/impl/ProductServiceImpl.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/productservice/src/main/java/com/ecommerce/productservice/repository/ProductRepository.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/productservice/src/main/java/com/ecommerce/productservice/dto/ProductResponse.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/userservice/src/main/java/com/ecommerce/userservice/service/impl/UserServiceImpl.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/userservice/src/main/java/com/ecommerce/userservice/config/SecurityConfig.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/productservice/src/main/java/com/ecommerce/productservice/config/SecurityConfig.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/inventoryservice/src/main/java/com/ecommerce/inventoryservice/repository/InventoryRepository.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/inventoryservice/src/main/java/com/ecommerce/inventoryservice/controller/InventoryRollbackController.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/inventoryservice/src/main/java/com/ecommerce/inventoryservice/controller/InventoryController.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/productservice/src/main/java/com/ecommerce/productservice/model/Product.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/apigateway/src/main/resources/application.yml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/apigateway/src/main/java/com/ecommerce/apigateway/config/GatewaySecurityConfig.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/inventoryservice/src/main/java/com/ecommerce/inventoryservice/model/Inventory.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/userservice/src/main/resources/application.yml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/productservice/src/main/resources/data.sql&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/inventoryservice/src/main/resources/application.yml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/paymentservice/src/main/resources/application.yml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/productservice/src/main/resources/application.yml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/userservice/src/main/java/com/ecommerce/userservice/util/JwtUtil.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/userservice/src/main/java/com/ecommerce/userservice/controller/AuthController.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/productservice/src/main/java/com/ecommerce/productservice/controller/ProductController.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/orderservice/src/main/resources/application.yml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/orderservice/src/main/java/com/ecommerce/orderservice/logging/GlobalLoggingConfig.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/orderservice/src/main/java/com/ecommerce/orderservice/client/impl/ProductClientImpl.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/orderservice/src/main/java/com/ecommerce/orderservice/service/OrderWorkflowService.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/userservice/src/main/java/com/ecommerce/userservice/controller/UserController.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/common-web/pom.xml&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/common-web/src/main/java/com/ecommerce/common/web/controller/GenericController.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/common-webflux&quot; type=&quot;4&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/common-webflux/src/main/java/com/ecommerce/common/webflux/context/ReactiveRequestContext.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;infoNode path=&quot;/orderservice/src/main/java/com/ecommerce/orderservice/controller/OrderController.java&quot; type=&quot;1&quot;/&gt;&#x0D;&#x0A;&lt;/historyRootNode&gt;&#x0D;&#x0A;&lt;/History&gt;"/>
+		<item key="ShowDerived" value="false"/>
+		<item key="FilterByLocation" value="false"/>
+		<item key="WorkingSet" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0D;&#x0A;&lt;workingSet workingSetName=&quot;&quot;/&gt;"/>
+		<section name="DialogBoundsSettings">
+			<item key="DIALOG_HEIGHT" value="500"/>
+			<item key="DIALOG_WIDTH" value="600"/>
+			<item key="DIALOG_X_ORIGIN" value="386"/>
+			<item key="DIALOG_Y_ORIGIN" value="30"/>
+			<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
+		</section>
+	</section>
+	<section name="NewWizardAction">
+		<section name="NewWizard.dialogBounds">
+		</section>
+	</section>
+</section>

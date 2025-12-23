@@ -1,0 +1,104 @@
+package com.ecommerce.orderservice.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.ecommerce.common.security.annotations.OrderCancel;
+import com.ecommerce.common.security.annotations.OrderCreate;
+import com.ecommerce.common.security.annotations.OrderRead;
+import com.ecommerce.common.security.annotations.OrderWrite;
+import com.ecommerce.common.webflux.controller.ReactiveGenericController;
+import com.ecommerce.orderservice.dto.OrderDTO;
+import com.ecommerce.orderservice.model.Order;
+import com.ecommerce.orderservice.service.OrderDomainService;
+import com.ecommerce.orderservice.service.OrderWorkflowService;
+
+import reactor.core.publisher.Mono;
+
+@RestController
+@RequestMapping("/api/v1/orders")
+public class OrderController
+        extends ReactiveGenericController<Order, Long> {
+
+    private static final Logger log =
+            LoggerFactory.getLogger(OrderController.class);
+
+    private final OrderWorkflowService workflowService;
+    private final OrderDomainService domainService;
+
+    public OrderController(
+            OrderWorkflowService workflowService,
+            OrderDomainService domainService
+    ) {
+        this.workflowService = workflowService;
+        this.domainService = domainService;
+    }
+
+    @Override
+    protected OrderDomainService service() {
+        return domainService;
+    }
+
+    @GetMapping("/ping")
+    public String ping() {
+        return "orderservice-up";
+    }
+
+    @OrderCreate
+    @PostMapping
+    public Mono<ResponseEntity<Order>> createOrder(
+            @RequestBody OrderDTO dto
+    ) {
+
+        log.info("Create order request received");
+
+        return workflowService
+                .createOrder(dto)
+                .map(order ->
+                        ResponseEntity
+                                .status(HttpStatus.CREATED)
+                                .body(order)
+                );
+    }
+
+    @Override
+    @OrderRead
+    @GetMapping("/{id}")
+    public Mono<Order> getById(@PathVariable Long id) {
+        return super.getById(id);
+    }
+
+    @OrderWrite
+    @PostMapping("/{id}/payment/callback")
+    public Mono<ResponseEntity<Order>> finalizePayment(
+            @PathVariable Long id,
+            @RequestParam boolean success
+    ) {
+
+        log.info(
+                "Payment callback received. orderId={}, success={}",
+                id,
+                success
+        );
+
+        return workflowService
+                .finalizePayment(id, success)
+                .map(ResponseEntity::ok);
+    }
+
+    @OrderCancel
+    @PostMapping("/{id}/cancel")
+    public Mono<ResponseEntity<Order>> cancelOrder(
+            @PathVariable Long id
+    ) {
+
+        log.info("Cancel order request. orderId={}", id);
+
+        return workflowService
+                .cancelOrder(id)
+                .map(ResponseEntity::ok);
+    }
+}

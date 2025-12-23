@@ -1,0 +1,183 @@
+[2025-12-01 12:41:04] [WARN ] [] [com.zaxxer.hikari.pool.HikariPool:797] - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17h56m29s680ms208�s400ns).
+[2025-12-01 12:45:05] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 12:50:05] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 12:55:05] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 13:00:06] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 13:05:06] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 13:10:06] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 13:15:06] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 13:20:06] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 13:25:06] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 13:30:06] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 13:35:06] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 13:40:06] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 13:45:06] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 13:49:29] [WARN ] [] [o.h.e.jdbc.spi.SqlExceptionHelper:145] - SQL Error: 42104, SQLState: 42S04
+[2025-12-01 13:49:29] [ERROR] [] [o.h.e.jdbc.spi.SqlExceptionHelper:150] - Table "USERS" not found (this database is empty); SQL statement:
+select u1_0.id,u1_0.created_at,u1_0.email,u1_0.full_name,u1_0.password,u1_0.phone,u1_0.username from users u1_0 where u1_0.username=? [42104-224]
+[2025-12-01 13:50:01] [INFO ] [] [o.s.c.n.e.s.EurekaServiceRegistry:91] - Unregistering application USERSERVICE with eureka with status DOWN
+[2025-12-01 13:50:01] [INFO ] [] [c.netflix.discovery.DiscoveryClient:1297] - Saw local status change event StatusChangeEvent [timestamp=1764577201330, current=DOWN, previous=UP]
+[2025-12-01 13:50:01] [INFO ] [] [c.netflix.discovery.DiscoveryClient:825] - DiscoveryClient_USERSERVICE/192.168.1.5:userservice:8081: registering service...
+[2025-12-01 13:50:01] [INFO ] [] [c.netflix.discovery.DiscoveryClient:834] - DiscoveryClient_USERSERVICE/192.168.1.5:userservice:8081 - registration status: 204
+[2025-12-01 13:50:01] [INFO ] [] [o.s.o.j.LocalContainerEntityManagerFactoryBean:650] - Closing JPA EntityManagerFactory for persistence unit 'default'
+[2025-12-01 13:50:01] [INFO ] [] [com.zaxxer.hikari.HikariDataSource:349] - HikariPool-1 - Shutdown initiated...
+[2025-12-01 13:50:01] [INFO ] [] [com.zaxxer.hikari.HikariDataSource:351] - HikariPool-1 - Shutdown completed.
+[2025-12-01 13:50:01] [INFO ] [] [c.netflix.discovery.DiscoveryClient:887] - Shutting down DiscoveryClient ...
+[2025-12-01 13:50:04] [INFO ] [] [c.netflix.discovery.DiscoveryClient:918] - Unregistering ...
+[2025-12-01 13:50:04] [INFO ] [] [c.netflix.discovery.DiscoveryClient:920] - DiscoveryClient_USERSERVICE/192.168.1.5:userservice:8081 - deregister  status: 200
+[2025-12-01 13:50:04] [INFO ] [] [c.netflix.discovery.DiscoveryClient:907] - Completed shut down of DiscoveryClient
+[2025-12-01 13:50:18] [INFO ] [User] [com.ecommerce.users.UserApplication:50] - Starting UserApplication using Java 17.0.16 with PID 8276 (D:\workspace\services\ecommerce\userservice\target\classes started by ADMIN in D:\workspace\services\ecommerce\userservice)
+[2025-12-01 13:50:18] [DEBUG] [User] [com.ecommerce.users.UserApplication:51] - Running with Spring Boot v3.3.4, Spring v6.1.13
+[2025-12-01 13:50:18] [INFO ] [User] [com.ecommerce.users.UserApplication:654] - No active profile set, falling back to 1 default profile: "default"
+[2025-12-01 13:50:19] [INFO ] [User] [o.s.d.r.c.RepositoryConfigurationDelegate:143] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2025-12-01 13:50:19] [INFO ] [User] [o.s.d.r.c.RepositoryConfigurationDelegate:211] - Finished Spring Data repository scanning in 183 ms. Found 2 JPA repository interfaces.
+[2025-12-01 13:50:19] [INFO ] [User] [o.s.cloud.context.scope.GenericScope:282] - BeanFactory id=6e6e9022-8d32-3b93-88d0-974a704c61fb
+[2025-12-01 13:50:20] [WARN ] [User] [o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:429] - Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [lbRestClientPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[2025-12-01 13:50:20] [WARN ] [User] [o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:437] - Bean 'deferringLoadBalancerInterceptor' of type [org.springframework.cloud.client.loadbalancer.DeferringLoadBalancerInterceptor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2025-12-01 13:50:20] [INFO ] [User] [o.s.b.w.e.tomcat.TomcatWebServer:111] - Tomcat initialized with port 8081 (http)
+[2025-12-01 13:50:20] [INFO ] [User] [o.a.catalina.core.StandardService:173] - Starting service [Tomcat]
+[2025-12-01 13:50:20] [INFO ] [User] [o.a.catalina.core.StandardEngine:173] - Starting Servlet engine: [Apache Tomcat/10.1.30]
+[2025-12-01 13:50:20] [INFO ] [User] [o.a.c.c.C.[Tomcat].[localhost].[/]:173] - Initializing Spring embedded WebApplicationContext
+[2025-12-01 13:50:20] [INFO ] [User] [o.s.b.w.s.c.ServletWebServerApplicationContext:296] - Root WebApplicationContext: initialization completed in 2160 ms
+[2025-12-01 13:50:20] [INFO ] [User] [o.h.jpa.internal.util.LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+[2025-12-01 13:50:20] [INFO ] [User] [org.hibernate.Version:44] - HHH000412: Hibernate ORM core version 6.5.3.Final
+[2025-12-01 13:50:20] [INFO ] [User] [o.h.c.i.RegionFactoryInitiator:50] - HHH000026: Second-level cache disabled
+[2025-12-01 13:50:21] [INFO ] [User] [o.s.o.j.p.SpringPersistenceUnitInfo:87] - No LoadTimeWeaver setup: ignoring JPA class transformer
+[2025-12-01 13:50:21] [INFO ] [User] [com.zaxxer.hikari.HikariDataSource:109] - HikariPool-1 - Starting...
+[2025-12-01 13:50:21] [INFO ] [User] [com.zaxxer.hikari.pool.HikariPool:554] - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:usersdb user=SA
+[2025-12-01 13:50:21] [INFO ] [User] [com.zaxxer.hikari.HikariDataSource:122] - HikariPool-1 - Start completed.
+[2025-12-01 13:50:22] [INFO ] [User] [o.h.e.t.j.p.i.JtaPlatformInitiator:59] - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+[2025-12-01 13:50:22] [INFO ] [User] [o.s.o.j.LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2025-12-01 13:50:23] [WARN ] [User] [o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration:236] - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+[2025-12-01 13:50:24] [INFO ] [User] [o.s.c.n.e.c.DiscoveryClientOptionalArgsConfiguration:80] - Eureka HTTP Client uses RestTemplate.
+[2025-12-01 13:50:24] [WARN ] [User] [o.s.c.l.c.LoadBalancerCacheAutoConfiguration$LoadBalancerCaffeineWarnLogger:94] - Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+[2025-12-01 13:50:24] [INFO ] [User] [o.s.c.n.eureka.InstanceInfoFactory:67] - Setting initial instance status as: STARTING
+[2025-12-01 13:50:24] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:329] - Initializing Eureka in region us-east-1
+[2025-12-01 13:50:24] [INFO ] [User] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 13:50:24] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:954] - Disable delta property : false
+[2025-12-01 13:50:24] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:955] - Single vip registry refresh property : null
+[2025-12-01 13:50:24] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:956] - Force full registry fetch : false
+[2025-12-01 13:50:24] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:957] - Application is null : false
+[2025-12-01 13:50:24] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:958] - Registered Applications size is zero : true
+[2025-12-01 13:50:24] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:960] - Application version is -1: true
+[2025-12-01 13:50:24] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:1042] - Getting all instance registry info from the eureka server
+[2025-12-01 13:50:24] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:1051] - The response status is 200
+[2025-12-01 13:50:24] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:1266] - Starting heartbeat executor: renew interval is: 30
+[2025-12-01 13:50:24] [INFO ] [User] [c.n.discovery.InstanceInfoReplicator:64] - InstanceInfoReplicator onDemand update allowed rate per min is 4
+[2025-12-01 13:50:24] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:455] - Discovery Client initialized at timestamp 1764577224701 with initial instances count: 6
+[2025-12-01 13:50:24] [INFO ] [User] [o.s.c.n.e.s.EurekaServiceRegistry:70] - Registering application USERSERVICE with eureka with status UP
+[2025-12-01 13:50:24] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:1297] - Saw local status change event StatusChangeEvent [timestamp=1764577224709, current=UP, previous=STARTING]
+[2025-12-01 13:50:24] [INFO ] [] [c.netflix.discovery.DiscoveryClient:825] - DiscoveryClient_USERSERVICE/192.168.1.5:userservice:8081: registering service...
+[2025-12-01 13:50:24] [INFO ] [User] [o.s.b.w.e.tomcat.TomcatWebServer:243] - Tomcat started on port 8081 (http) with context path '/'
+[2025-12-01 13:50:24] [INFO ] [User] [o.s.c.n.e.s.EurekaAutoServiceRegistration:150] - Updating port to 8081
+[2025-12-01 13:50:24] [INFO ] [] [c.netflix.discovery.DiscoveryClient:834] - DiscoveryClient_USERSERVICE/192.168.1.5:userservice:8081 - registration status: 204
+[2025-12-01 13:50:24] [INFO ] [User] [com.ecommerce.users.UserApplication:56] - Started UserApplication in 7.524 seconds (process running for 8.008)
+[2025-12-01 13:50:40] [INFO ] [] [o.a.c.c.C.[Tomcat].[localhost].[/]:173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2025-12-01 13:50:40] [INFO ] [] [o.s.web.servlet.DispatcherServlet:532] - Initializing Servlet 'dispatcherServlet'
+[2025-12-01 13:50:40] [INFO ] [] [o.s.web.servlet.DispatcherServlet:554] - Completed initialization in 0 ms
+[2025-12-01 13:55:24] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 14:00:24] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 14:05:24] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 14:10:24] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 14:15:24] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 14:20:24] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 14:25:24] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 14:30:24] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 14:35:24] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 14:40:24] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 14:45:24] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 15:39:46] [WARN ] [] [com.zaxxer.hikari.pool.HikariPool:797] - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=52m24s194ms568�s).
+[2025-12-01 15:42:18] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 15:47:18] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 15:52:18] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 15:57:18] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 16:02:18] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 16:07:18] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 16:16:47] [WARN ] [] [com.zaxxer.hikari.pool.HikariPool:797] - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=9m380ms79�s200ns).
+[2025-12-01 16:20:48] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 16:25:48] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 16:30:48] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 16:35:48] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 16:40:48] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 16:45:48] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 16:50:48] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 16:55:49] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 17:00:49] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 17:05:49] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 17:10:49] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 17:15:49] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 17:18:42] [WARN ] [] [o.h.e.jdbc.spi.SqlExceptionHelper:145] - SQL Error: 42104, SQLState: 42S04
+[2025-12-01 17:18:42] [ERROR] [] [o.h.e.jdbc.spi.SqlExceptionHelper:150] - Table "USERS" not found (this database is empty); SQL statement:
+select u1_0.id,u1_0.created_at,u1_0.email,u1_0.full_name,u1_0.password,u1_0.phone,u1_0.username from users u1_0 where u1_0.username=? [42104-224]
+[2025-12-01 17:18:52] [WARN ] [] [o.h.e.jdbc.spi.SqlExceptionHelper:145] - SQL Error: 42104, SQLState: 42S04
+[2025-12-01 17:18:52] [ERROR] [] [o.h.e.jdbc.spi.SqlExceptionHelper:150] - Table "USERS" not found (this database is empty); SQL statement:
+select u1_0.id from users u1_0 where u1_0.username=? fetch first ? rows only [42104-224]
+[2025-12-01 17:20:49] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 17:25:49] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 17:29:24] [INFO ] [] [o.s.c.n.e.s.EurekaServiceRegistry:91] - Unregistering application USERSERVICE with eureka with status DOWN
+[2025-12-01 17:29:24] [INFO ] [] [c.netflix.discovery.DiscoveryClient:1297] - Saw local status change event StatusChangeEvent [timestamp=1764590364662, current=DOWN, previous=UP]
+[2025-12-01 17:29:24] [INFO ] [] [c.netflix.discovery.DiscoveryClient:825] - DiscoveryClient_USERSERVICE/192.168.1.5:userservice:8081: registering service...
+[2025-12-01 17:29:24] [INFO ] [] [c.netflix.discovery.DiscoveryClient:834] - DiscoveryClient_USERSERVICE/192.168.1.5:userservice:8081 - registration status: 204
+[2025-12-01 17:29:25] [INFO ] [] [o.s.o.j.LocalContainerEntityManagerFactoryBean:650] - Closing JPA EntityManagerFactory for persistence unit 'default'
+[2025-12-01 17:29:25] [INFO ] [] [com.zaxxer.hikari.HikariDataSource:349] - HikariPool-1 - Shutdown initiated...
+[2025-12-01 17:29:25] [INFO ] [] [com.zaxxer.hikari.HikariDataSource:351] - HikariPool-1 - Shutdown completed.
+[2025-12-01 17:29:25] [INFO ] [] [c.netflix.discovery.DiscoveryClient:887] - Shutting down DiscoveryClient ...
+[2025-12-01 17:29:28] [INFO ] [] [c.netflix.discovery.DiscoveryClient:918] - Unregistering ...
+[2025-12-01 17:29:28] [INFO ] [] [c.netflix.discovery.DiscoveryClient:920] - DiscoveryClient_USERSERVICE/192.168.1.5:userservice:8081 - deregister  status: 200
+[2025-12-01 17:29:28] [INFO ] [] [c.netflix.discovery.DiscoveryClient:907] - Completed shut down of DiscoveryClient
+[2025-12-01 17:31:36] [INFO ] [User] [com.ecommerce.users.UserApplication:50] - Starting UserApplication using Java 17.0.16 with PID 20148 (D:\workspace\services\ecommerce\userservice\target\classes started by ADMIN in D:\workspace\services\ecommerce\userservice)
+[2025-12-01 17:31:36] [DEBUG] [User] [com.ecommerce.users.UserApplication:51] - Running with Spring Boot v3.3.4, Spring v6.1.13
+[2025-12-01 17:31:36] [INFO ] [User] [com.ecommerce.users.UserApplication:654] - No active profile set, falling back to 1 default profile: "default"
+[2025-12-01 17:31:38] [INFO ] [User] [o.s.d.r.c.RepositoryConfigurationDelegate:143] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2025-12-01 17:31:39] [INFO ] [User] [o.s.d.r.c.RepositoryConfigurationDelegate:211] - Finished Spring Data repository scanning in 499 ms. Found 2 JPA repository interfaces.
+[2025-12-01 17:31:39] [INFO ] [User] [o.s.cloud.context.scope.GenericScope:282] - BeanFactory id=6e6e9022-8d32-3b93-88d0-974a704c61fb
+[2025-12-01 17:31:40] [WARN ] [User] [o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:429] - Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [lbRestClientPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[2025-12-01 17:31:40] [WARN ] [User] [o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:437] - Bean 'deferringLoadBalancerInterceptor' of type [org.springframework.cloud.client.loadbalancer.DeferringLoadBalancerInterceptor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+[2025-12-01 17:31:40] [INFO ] [User] [o.s.b.w.e.tomcat.TomcatWebServer:111] - Tomcat initialized with port 8081 (http)
+[2025-12-01 17:31:40] [INFO ] [User] [o.a.catalina.core.StandardService:173] - Starting service [Tomcat]
+[2025-12-01 17:31:40] [INFO ] [User] [o.a.catalina.core.StandardEngine:173] - Starting Servlet engine: [Apache Tomcat/10.1.30]
+[2025-12-01 17:31:41] [INFO ] [User] [o.a.c.c.C.[Tomcat].[localhost].[/]:173] - Initializing Spring embedded WebApplicationContext
+[2025-12-01 17:31:41] [INFO ] [User] [o.s.b.w.s.c.ServletWebServerApplicationContext:296] - Root WebApplicationContext: initialization completed in 4083 ms
+[2025-12-01 17:31:41] [INFO ] [User] [o.h.jpa.internal.util.LogHelper:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+[2025-12-01 17:31:41] [INFO ] [User] [org.hibernate.Version:44] - HHH000412: Hibernate ORM core version 6.5.3.Final
+[2025-12-01 17:31:41] [INFO ] [User] [o.h.c.i.RegionFactoryInitiator:50] - HHH000026: Second-level cache disabled
+[2025-12-01 17:31:42] [INFO ] [User] [o.s.o.j.p.SpringPersistenceUnitInfo:87] - No LoadTimeWeaver setup: ignoring JPA class transformer
+[2025-12-01 17:31:42] [INFO ] [User] [com.zaxxer.hikari.HikariDataSource:109] - HikariPool-1 - Starting...
+[2025-12-01 17:31:42] [INFO ] [User] [com.zaxxer.hikari.pool.HikariPool:554] - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:usersdb user=SA
+[2025-12-01 17:31:42] [INFO ] [User] [com.zaxxer.hikari.HikariDataSource:122] - HikariPool-1 - Start completed.
+[2025-12-01 17:31:44] [INFO ] [User] [o.h.e.t.j.p.i.JtaPlatformInitiator:59] - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+[2025-12-01 17:31:44] [INFO ] [User] [o.s.o.j.LocalContainerEntityManagerFactoryBean:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2025-12-01 17:31:44] [WARN ] [User] [o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration:236] - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+[2025-12-01 17:31:45] [INFO ] [User] [o.s.c.n.e.c.DiscoveryClientOptionalArgsConfiguration:80] - Eureka HTTP Client uses RestTemplate.
+[2025-12-01 17:31:45] [WARN ] [User] [o.s.c.l.c.LoadBalancerCacheAutoConfiguration$LoadBalancerCaffeineWarnLogger:94] - Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+[2025-12-01 17:31:45] [INFO ] [User] [o.s.c.n.eureka.InstanceInfoFactory:67] - Setting initial instance status as: STARTING
+[2025-12-01 17:31:45] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:329] - Initializing Eureka in region us-east-1
+[2025-12-01 17:31:45] [INFO ] [User] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 17:31:45] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:954] - Disable delta property : false
+[2025-12-01 17:31:45] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:955] - Single vip registry refresh property : null
+[2025-12-01 17:31:45] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:956] - Force full registry fetch : false
+[2025-12-01 17:31:45] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:957] - Application is null : false
+[2025-12-01 17:31:45] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:958] - Registered Applications size is zero : true
+[2025-12-01 17:31:45] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:960] - Application version is -1: true
+[2025-12-01 17:31:45] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:1042] - Getting all instance registry info from the eureka server
+[2025-12-01 17:31:46] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:1051] - The response status is 200
+[2025-12-01 17:31:46] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:1266] - Starting heartbeat executor: renew interval is: 30
+[2025-12-01 17:31:46] [INFO ] [User] [c.n.discovery.InstanceInfoReplicator:64] - InstanceInfoReplicator onDemand update allowed rate per min is 4
+[2025-12-01 17:31:46] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:455] - Discovery Client initialized at timestamp 1764590506119 with initial instances count: 1
+[2025-12-01 17:31:46] [INFO ] [User] [o.s.c.n.e.s.EurekaServiceRegistry:70] - Registering application USERSERVICE with eureka with status UP
+[2025-12-01 17:31:46] [INFO ] [User] [c.netflix.discovery.DiscoveryClient:1297] - Saw local status change event StatusChangeEvent [timestamp=1764590506124, current=UP, previous=STARTING]
+[2025-12-01 17:31:46] [INFO ] [] [c.netflix.discovery.DiscoveryClient:825] - DiscoveryClient_USERSERVICE/192.168.1.5:userservice:8081: registering service...
+[2025-12-01 17:31:46] [INFO ] [User] [o.s.b.w.e.tomcat.TomcatWebServer:243] - Tomcat started on port 8081 (http) with context path '/'
+[2025-12-01 17:31:46] [INFO ] [User] [o.s.c.n.e.s.EurekaAutoServiceRegistration:150] - Updating port to 8081
+[2025-12-01 17:31:46] [INFO ] [] [c.netflix.discovery.DiscoveryClient:834] - DiscoveryClient_USERSERVICE/192.168.1.5:userservice:8081 - registration status: 204
+[2025-12-01 17:31:46] [INFO ] [User] [com.ecommerce.users.UserApplication:56] - Started UserApplication in 10.229 seconds (process running for 10.728)
+[2025-12-01 17:36:18] [INFO ] [] [o.a.c.c.C.[Tomcat].[localhost].[/]:173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2025-12-01 17:36:18] [INFO ] [] [o.s.web.servlet.DispatcherServlet:532] - Initializing Servlet 'dispatcherServlet'
+[2025-12-01 17:36:18] [INFO ] [] [o.s.web.servlet.DispatcherServlet:554] - Completed initialization in 0 ms
+[2025-12-01 17:36:45] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 17:41:45] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 17:46:45] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 17:51:45] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 17:56:45] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 18:01:45] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration
+[2025-12-01 18:06:45] [INFO ] [] [c.n.d.s.r.aws.ConfigClusterResolver:43] - Resolving eureka endpoints via configuration

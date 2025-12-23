@@ -1,0 +1,14 @@
+package com.ecommerce.common.web.feign;
+
+@Configuration
+public class FeignBaseConfig {
+
+    @Bean
+    public RequestInterceptor requestInterceptor() {
+        return template -> {
+            RequestContext ctx = RequestContextHolder.get();
+            template.header("X-User-Id", String.valueOf(ctx.userId()));
+            template.header("X-Store-Id", String.valueOf(ctx.storeId()));
+        };
+    }
+}

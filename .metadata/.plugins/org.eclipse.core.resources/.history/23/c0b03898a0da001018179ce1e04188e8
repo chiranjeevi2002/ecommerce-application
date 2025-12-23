@@ -1,0 +1,133 @@
+package com.ecommerce.apigateway.filter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.Ordered;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.filter.GatewayFilterChain;
+import reactor.core.publisher.Mono;
+
+import java.net.InetSocketAddress;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Component
+public class GlobalLoggingFilter implements GlobalFilter, Ordered {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalLoggingFilter.class);
+
+    public static final String TRACE_HEADER = "X-Trace-Id";
+
+    private static final Set<String> SENSITIVE_HEADERS = Set.of(
+            "authorization", "cookie", "set-cookie"
+    );
+
+    @Override
+    public int getOrder() {
+        return Ordered.HIGHEST_PRECEDENCE + 10;
+    }
+
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+
+        Instant start = Instant.now();
+
+        // Add or propagate trace ID
+        String traceId = resolveOrCreateTraceId(exchange.getRequest().getHeaders());
+
+        ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
+                .header(TRACE_HEADER, traceId)
+                .build();
+
+        ServerWebExchange mutatedExchange = exchange.mutate()
+                .request(mutatedRequest)
+                .build();
+
+        logRequest(mutatedExchange, traceId);
+
+        return chain.filter(mutatedExchange)
+                .doOnSuccess((a) -> {
+                    long durationMs = Duration.between(start, Instant.now()).toMillis();
+                    logResponse(mutatedExchange, traceId, durationMs);
+                })
+                .doOnError(throwable -> {
+                    long durationMs = Duration.between(start, Instant.now()).toMillis();
+                    logResponseError(mutatedExchange, traceId, throwable, durationMs);
+                });
+    }
+
+    private String resolveOrCreateTraceId(HttpHeaders headers) {
+        String existing = headers.getFirst(TRACE_HEADER);
+        return (existing != null && !existing.isBlank())
+                ? existing
+                : UUID.randomUUID().toString();
+    }
+
+    private void logRequest(ServerWebExchange exchange, String traceId) {
+        ServerHttpRequest req = exchange.getRequest();
+
+        String method = req.getMethod() != null ? req.getMethod().name() : "UNKNOWN";
+        String path = req.getPath().value();
+        String query = req.getURI().getQuery();
+
+        InetSocketAddress remote = req.getRemoteAddress();
+        String remoteAddr = remote != null ? remote.toString() : "unknown";
+
+        Map<String, List<String>> headers = maskHeaders(req.getHeaders());
+
+        log.info(" REQUEST [{} {}{}] trace={} remote={} headers=[{}]",
+                method,
+                path,
+                (query != null ? "?" + query : ""),
+                traceId,
+                remoteAddr,
+                shortHeaders(headers));
+    }
+
+    private void logResponse(ServerWebExchange exchange, String traceId, long durationMs) {
+        int status = exchange.getResponse().getStatusCode() != null
+                ? exchange.getResponse().getStatusCode().value()
+                : -1;
+
+        log.info(" RESPONSE [status={}] trace={} durationMs={}", status, traceId, durationMs);
+    }
+
+    private void logResponseError(ServerWebExchange exchange, String traceId,
+                                  Throwable throwable, long durationMs) {
+
+        int status = exchange.getResponse().getStatusCode() != null
+                ? exchange.getResponse().getStatusCode().value()
+                : -1;
+
+        log.error(" RESPONSE_ERROR [status={}] trace={} durationMs={} error={}",
+                status, traceId, durationMs, throwable.toString());
+    }
+
+    private Map<String, List<String>> maskHeaders(HttpHeaders headers) {
+        Map<String, List<String>> result = new LinkedHashMap<>();
+
+        headers.forEach((key, values) -> {
+            String lower = key.toLowerCase(Locale.ROOT);
+            if (SENSITIVE_HEADERS.contains(lower)) {
+                result.put(key, List.of("[MASKED]"));
+            } else {
+                result.put(key, values.stream().limit(3).collect(Collectors.toList()));
+            }
+        });
+
+        return result;
+    }
+
+    private String shortHeaders(Map<String, List<String>> headers) {
+        return headers.entrySet().stream()
+                .limit(8)
+                .map(e -> e.getKey() + "=" + e.getValue())
+                .collect(Collectors.joining(", "));
+    }
+}

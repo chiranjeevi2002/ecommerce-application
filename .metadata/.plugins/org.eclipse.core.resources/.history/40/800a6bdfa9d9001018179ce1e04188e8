@@ -1,0 +1,13 @@
+package com.ecommerce.common.security;
+
+public final class UserRoles {
+
+    private UserRoles() {}
+
+    
+    public static final String ADMIN = Role.ADMIN.authority();
+    public static final String SUPERADMIN = Role.SUPERADMIN.authority();
+    public static final String DEFAULT = Role.CUSTOMER.authority();
+    
+    
+}

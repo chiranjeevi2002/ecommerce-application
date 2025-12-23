@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: productservice
+
+logging:
+  level:
+    com.ecommerce.product: DEBUG

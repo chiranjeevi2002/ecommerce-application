@@ -1,0 +1,46 @@
+package com.ecommerce.productservice.config;
+
+import com.ecommerce.common.security.ProductRoles;
+import com.ecommerce.common.security.SecurityConstants;
+import com.ecommerce.productservice.security.HeaderAuthFilter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
+
+@Configuration
+@EnableMethodSecurity
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+    @Bean
+    public HeaderAuthFilter headerAuthFilter() {
+        return new HeaderAuthFilter();
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                // public endpoints
+                .requestMatchers(SecurityConstants.PRODUCTS).permitAll()
+                .requestMatchers(SecurityConstants.UPLOADS).permitAll()
+                .requestMatchers(SecurityConstants.ACTUATOR).permitAll()
+
+                // admin / write operations
+                .requestMatchers(SecurityConstants.ADMIN)
+                    .hasAnyAuthority(ProductRoles.WRITE.toArray(String[]::new))
+
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(headerAuthFilter(), AnonymousAuthenticationFilter.class);
+
+        return http.build();
+    }
+}
+

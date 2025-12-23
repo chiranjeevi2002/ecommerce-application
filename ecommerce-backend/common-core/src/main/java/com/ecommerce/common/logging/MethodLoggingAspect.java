@@ -1,0 +1,49 @@
+package com.ecommerce.common.logging;
+
+import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.*;
+import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+
+@Slf4j
+@Aspect
+@Component
+public class MethodLoggingAspect {
+
+    // Log ALL service + client + controller methods
+    @Around("""
+        execution(* com.ecommerce..controller..*(..)) ||
+        execution(* com.ecommerce..service..*(..)) ||
+        execution(* com.ecommerce..client..*(..))
+    """)
+    public Object logMethodExecution(ProceedingJoinPoint pjp) throws Throwable {
+
+        String method = pjp.getSignature().toShortString();
+        long start = System.currentTimeMillis();
+
+        log.info("➡️ ENTER {} args={}", method, Arrays.toString(pjp.getArgs()));
+
+        try {
+            Object result = pjp.proceed();
+            long duration = System.currentTimeMillis() - start;
+
+            log.info("⬅️ EXIT  {} time={}ms", method, duration);
+            return result;
+
+        } catch (Throwable ex) {
+            long duration = System.currentTimeMillis() - start;
+
+            log.error(
+                "❌ EXCEPTION {} time={}ms message={}",
+                method,
+                duration,
+                ex.getMessage(),
+                ex
+            );
+            throw ex;
+        }
+    }
+}
+

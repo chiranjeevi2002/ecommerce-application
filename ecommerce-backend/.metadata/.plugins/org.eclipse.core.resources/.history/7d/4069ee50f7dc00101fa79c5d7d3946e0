@@ -1,0 +1,37 @@
+package com.ecommerce.common.web.controller;
+
+public abstract class GenericController<T, ID> {
+
+    protected abstract GenericService<T, ID> service();
+
+    @GetMapping("/{id}")
+    public T getById(@PathVariable ID id) {
+        return service().getById(id);
+    }
+
+    @GetMapping
+    public PageResponse<T> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return PageResponse.from(service().getAll(pageable));
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public T create(@RequestBody @Valid T dto) {
+        return service().create(dto);
+    }
+
+    @PutMapping("/{id}")
+    public T update(@PathVariable ID id, @RequestBody @Valid T dto) {
+        return service().update(id, dto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable ID id) {
+        service().delete(id);
+    }
+}

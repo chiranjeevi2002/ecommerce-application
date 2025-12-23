@@ -1,0 +1,54 @@
+package com.ecommerce.orderservice.controller;
+
+import com.ecommerce.orderservice.dto.OrderDTO;
+import com.ecommerce.orderservice.model.Order;
+import com.ecommerce.orderservice.service.OrderDomainService;
+import com.ecommerce.orderservice.service.OrderWorkflowService;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
+
+@RestController
+@RequestMapping("/orderservice/orders")
+public class OrderController {
+
+    private final OrderWorkflowService workflowService;
+    private final OrderDomainService domainService;
+
+    public OrderController(OrderWorkflowService workflowService, OrderDomainService domainService) {
+        this.workflowService = workflowService;
+        this.domainService = domainService;
+    }
+    
+    @GetMapping
+    public String get(){
+    	return "hi";
+    }
+
+    @PostMapping
+    public Mono<ResponseEntity<Order>> create(
+            @RequestHeader("X-Store-Id") Long storeId,
+            @RequestHeader("X-User-Id") Long userId,
+            @RequestBody OrderDTO dto) {
+
+        return workflowService.createOrder(userId, storeId, dto)
+                .map(order -> ResponseEntity.status(HttpStatus.CREATED).body(order));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Order> get(
+            @RequestHeader("X-Store-Id") Long storeId,
+            @PathVariable Long id) {
+        return ResponseEntity.ok(domainService.get(id, storeId));
+    }
+
+    @PostMapping("/{id}/payment/callback")
+    public Mono<Order> finalizePayment(
+            @RequestHeader("X-Store-Id") Long storeId,
+            @PathVariable Long id,
+            @RequestParam boolean success) {
+        return workflowService.finalizePayment(id, storeId, success);
+    }
+}

@@ -1,0 +1,13 @@
+package com.ecommerce.orderservice.dto;
+
+import java.util.List;
+
+public record InventoryReserveRequest(
+        Long storeId,
+        List<Item> items
+) {
+    public record Item(
+            Long productId,
+            Integer quantity
+    ) {}
+}

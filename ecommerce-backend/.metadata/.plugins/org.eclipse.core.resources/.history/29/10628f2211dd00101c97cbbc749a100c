@@ -1,0 +1,63 @@
+package com.ecommerce.common.webflux.security;
+
+import java.util.List;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+
+import com.ecommerce.common.webflux.context.ReactiveContextHolder;
+import com.ecommerce.common.webflux.context.ReactiveRequestContext;
+
+import reactor.core.publisher.Mono;
+
+public final class ReactiveSecurityContextAdapter {
+
+    private ReactiveSecurityContextAdapter() {}
+
+    public static Mono<ReactiveRequestContext> currentContext() {
+
+        return Mono.zip(
+                        ReactiveContextHolder.get(),
+                        ReactiveSecurityContextHolder.getContext()
+                )
+                .map(tuple -> {
+                    ReactiveRequestContext existing = tuple.getT1();
+                    Authentication auth = tuple.getT2().getAuthentication();
+
+                    if (auth == null || !auth.isAuthenticated()) {
+                        return existing;
+                    }
+
+                    return new ReactiveRequestContext(
+                            extractUserId(auth, existing),
+                            extractStoreId(auth, existing),
+                            auth.getName(),
+                            extractRoles(auth),
+                            existing.authorization(),
+                            existing.traceId()
+                    );
+                });
+    }
+
+    private static Long extractUserId(
+            Authentication auth,
+            ReactiveRequestContext existing
+    ) {
+        return existing.userId();
+    }
+
+    private static Long extractStoreId(
+            Authentication auth,
+            ReactiveRequestContext existing
+    ) {
+        return existing.storeId();
+    }
+
+    private static List<String> extractRoles(Authentication auth) {
+        return auth.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+    }
+}

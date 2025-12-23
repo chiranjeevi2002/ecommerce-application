@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: inventoryservice
+
+logging:
+  level:
+    com.ecommerce.inventory: DEBUG

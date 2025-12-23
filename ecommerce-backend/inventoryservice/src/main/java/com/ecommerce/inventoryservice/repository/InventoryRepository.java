@@ -1,0 +1,54 @@
+package com.ecommerce.inventoryservice.repository;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+
+import com.ecommerce.inventoryservice.model.Inventory;
+
+public interface InventoryRepository extends JpaRepository<Inventory, Long> {
+
+    Optional<Inventory> findByProductIdAndStoreId(Long productId, Long storeId);
+
+    Optional<Inventory> findByIdAndStoreId(Long id, Long storeId);
+
+    List<Inventory> findByStoreId(Long storeId);
+
+
+    @Query("""
+        select i.productId
+          from Inventory i
+         where i.storeId = :storeId
+           and i.productId in :productIds
+           and i.availableQuantity < :requiredQty
+    """)
+    List<Long> findInsufficientStock(
+            Long storeId,
+            List<Long> productIds,
+            Integer requiredQty
+    );
+
+
+    @Modifying
+    @Query("""
+        update Inventory i
+           set i.availableQuantity = i.availableQuantity - :qty
+         where i.storeId = :storeId
+           and i.productId = :productId
+           and i.availableQuantity >= :qty
+    """)
+    int decreaseStock(Long storeId, Long productId, Integer qty);
+
+
+    @Modifying
+    @Query("""
+        update Inventory i
+           set i.availableQuantity = i.availableQuantity + :qty
+         where i.storeId = :storeId
+           and i.productId = :productId
+    """)
+    int increaseStock(Long storeId, Long productId, Integer qty);
+}

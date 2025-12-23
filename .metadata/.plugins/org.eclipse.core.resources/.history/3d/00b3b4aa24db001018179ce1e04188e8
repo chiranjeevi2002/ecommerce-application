@@ -1,0 +1,9 @@
+package com.ecommerce.orderservice.client;
+
+import com.ecommerce.orderservice.dto.PaymentResponse;
+
+import reactor.core.publisher.Mono;
+
+public interface PaymentClient {
+    Mono<PaymentResponse> initiatePayment(Long orderId, Long userId, Double amount, Long storeId);
+}

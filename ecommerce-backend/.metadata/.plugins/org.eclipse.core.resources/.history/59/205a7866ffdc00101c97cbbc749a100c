@@ -1,0 +1,25 @@
+package com.ecommerce.orderservice.context;
+
+import com.ecommerce.common.context.RequestContext;
+import reactor.core.publisher.Mono;
+import reactor.util.context.Context;
+
+public final class ReactiveRequestContextHolder {
+
+    private static final String CONTEXT_KEY = "REQUEST_CONTEXT";
+
+    private ReactiveRequestContextHolder() {}
+
+    public static Context with(RequestContext requestContext) {
+        return Context.of(CONTEXT_KEY, requestContext);
+    }
+
+    public static Mono<RequestContext> get() {
+        return Mono.deferContextual(ctx -> {
+            if (!ctx.hasKey(CONTEXT_KEY)) {
+                return Mono.error(new IllegalStateException("RequestContext not found in Reactor Context"));
+            }
+            return Mono.just(ctx.get(CONTEXT_KEY));
+        });
+    }
+}

@@ -1,0 +1,163 @@
+package com.ecommerce.orderservice.controller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ecommerce.common.security.annotations.OrderCancel;
+import com.ecommerce.common.security.annotations.OrderCreate;
+import com.ecommerce.common.security.annotations.OrderRead;
+import com.ecommerce.common.security.annotations.OrderWrite;
+import com.ecommerce.orderservice.dto.OrderDTO;
+import com.ecommerce.orderservice.model.Order;
+import com.ecommerce.orderservice.service.OrderDomainService;
+import com.ecommerce.orderservice.service.OrderWorkflowService;
+
+import reactor.core.publisher.Mono;
+
+@RestController
+
+//@RequestMapping(SecurityConstants.ORDERS_BASE)
+@RequestMapping("/api/v1/orders")
+public class OrderController {
+
+    private static final Logger log =
+            LoggerFactory.getLogger(OrderController.class);
+
+    private final OrderWorkflowService workflowService;
+    private final OrderDomainService domainService;
+
+    public OrderController(
+            OrderWorkflowService workflowService,
+            OrderDomainService domainService
+    ) {
+        this.workflowService = workflowService;
+        this.domainService = domainService;
+    }
+
+    @GetMapping("/ping")
+    public String ping() {
+        return "orderservice-up";
+    }
+
+    /**
+     * CUSTOMER creates order
+     * ADMIN / SUPERADMIN may also create
+     */
+    @OrderCreate
+    @PostMapping
+    public Mono<ResponseEntity<Order>> createOrder(
+            @RequestBody OrderDTO dto
+    ) {
+
+        log.info("Create order request received");
+
+        return workflowService.createOrder(dto)
+                .map(order -> {
+                    log.info(
+                            "Order created successfully. orderId={}, status={}",
+                            order.getId(),
+                            order.getStatus()
+                    );
+                    return ResponseEntity
+                            .status(HttpStatus.CREATED)
+                            .body(order);
+                });
+    }
+
+    /**
+     * CUSTOMER → read own order
+     * ADMIN / ORDER_MANAGER → read any order
+     */
+    @OrderRead
+    @GetMapping("/{id}")
+    public ResponseEntity<Order> getOrder(
+            @PathVariable Long id,
+            @RequestHeader("X-Store-Id") Long storeId,
+            @RequestHeader("X-User-Id") Long userId
+    ) {
+
+        log.debug("Fetch order request. orderId={}", id);
+
+        Order order = domainService.get(id, storeId);
+
+        if (!order.getUserId().equals(userId)) {
+            log.warn(
+                    "Unauthorized access attempt. orderId={}, userId={}",
+                    id,
+                    userId
+            );
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "Cannot access other user's order"
+            );
+        }
+
+        return ResponseEntity.ok(order);
+    }
+
+    /**
+     * PaymentService callback
+     * Not exposed to CUSTOMER directly
+     */
+    @OrderWrite
+    @PostMapping("/{id}/payment/callback")
+    public Mono<ResponseEntity<Order>> finalizePayment(
+            @PathVariable Long id,
+            @RequestParam boolean success,
+            @RequestHeader("X-Store-Id") Long storeId
+    ) {
+
+        log.info(
+                "Payment callback received. orderId={}, success={}",
+                id,
+                success
+        );
+
+        return workflowService
+                .finalizePayment(id, storeId, success)
+                .map(order -> {
+                    log.info(
+                            "Payment finalized. orderId={}, status={}",
+                            order.getId(),
+                            order.getStatus()
+                    );
+                    return ResponseEntity.ok(order);
+                });
+    }
+
+    /**
+     * CUSTOMER cancels own order
+     */
+    @OrderCancel
+    @PostMapping("/{id}/cancel")
+    public Mono<ResponseEntity<Order>> cancelOrder(
+            @PathVariable Long id,
+            @RequestHeader("X-Store-Id") Long storeId,
+            @RequestHeader("X-User-Id") Long userId
+    ) {
+
+        log.info(
+                "Cancel order request. orderId={}, userId={}",
+                id,
+                userId
+        );
+
+        return workflowService
+                .cancelOrder(id, userId, storeId)
+                .map(order -> {
+                    log.info(
+                            "Order cancelled successfully. orderId={}",
+                            order.getId()
+                    );
+                    return ResponseEntity.ok(order);
+                });
+    }
+}

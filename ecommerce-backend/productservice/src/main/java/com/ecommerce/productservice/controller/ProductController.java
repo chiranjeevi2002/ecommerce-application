@@ -1,0 +1,117 @@
+package com.ecommerce.productservice.controller;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ecommerce.common.security.SecurityConstants;
+import com.ecommerce.common.security.annotations.AdminOnly;
+import com.ecommerce.common.security.annotations.ProductRead;
+import com.ecommerce.common.security.annotations.ProductWrite;
+import com.ecommerce.productservice.dto.ProductDTO;
+import com.ecommerce.productservice.dto.ProductResponse;
+import com.ecommerce.productservice.dto.ProductValidationResult;
+import com.ecommerce.productservice.service.ProductService;
+
+import jakarta.validation.Valid;
+
+@Validated
+@RestController
+@RequestMapping(SecurityConstants.PRODUCTS_BASE)
+public class ProductController {
+
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
+
+
+    @ProductWrite
+    @PostMapping
+    public ResponseEntity<ProductResponse> create(
+            @RequestHeader("X-Store-Id") Long storeId,
+            @Valid @RequestBody ProductDTO dto
+    ) {
+        var created = productService.createProduct(dto, storeId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+
+    @ProductRead
+    @GetMapping("/{id}")
+    public ProductResponse getProduct(
+            @PathVariable Long id,
+            @RequestHeader("X-Store-Id") Long storeId
+    ) {
+        return productService.getProduct(id, storeId);
+    }
+    
+    
+    @PostMapping("/validate")
+    public ProductValidationResult validateProducts(
+            @RequestHeader("X-Store-Id") String storeId,
+            @RequestBody List<Long> productIds
+    ) {
+        return productService.validateProducts(Long.valueOf(storeId), productIds);
+    }
+
+    
+    @GetMapping
+    public Page<ProductResponse> list(
+            @RequestHeader("X-Store-Id") Long storeId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size,
+            @RequestParam(name = "search", required = false) String search,
+            @RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy,
+            @RequestParam(name = "direction", defaultValue = "DESC") String direction
+    ) {
+        var safePage = Math.max(page, 0);
+        var safeSize = Math.min(Math.max(size, 1), 100); 
+
+        var keyword = (search == null || search.isBlank())
+                ? null
+                : search.trim();
+
+        if (keyword != null) {
+            return productService.searchProducts(storeId, keyword, safePage, safeSize, sortBy, direction);
+        }
+
+        return productService.getProductsByStore(storeId, safePage, safeSize, sortBy, direction);
+    }
+
+
+    @AdminOnly
+    @PutMapping("/{id}")
+    public ProductResponse update(
+            @PathVariable Long id,
+            @RequestHeader("X-Store-Id") Long storeId,
+            @Valid @RequestBody ProductDTO dto
+    ) {
+        return productService.updateProduct(id, dto, storeId);
+    }
+
+
+    @AdminOnly
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(
+            @PathVariable Long id,
+            @RequestHeader("X-Store-Id") Long storeId
+    ) {
+        productService.deleteProduct(id, storeId);
+        return ResponseEntity.noContent().build();
+    }
+}

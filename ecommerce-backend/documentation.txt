@@ -1,0 +1,226 @@
+Below is a **polished, professional, production-grade Project Documentation** for your multi-tenant ecommerce system — fully based on everything we built from **Dec 1st to Dec 9th**.
+
+This is suitable for:
+✔ GitHub README
+✔ Project Report
+✔ Portfolio
+✔ Demo Document
+✔ Technical Documentation
+
+---
+
+# 🌐 **Multi-Tenant Ecommerce Platform – Project Documentation**
+
+## 📌 **1. Overview**
+
+This project is a **multi-tenant ecommerce platform** designed to support multiple businesses inside a single scalable system. Each tenant (store) has **fully isolated data, independent configurations, and separate product catalogs**, while all microservices run on a shared infrastructure.
+
+The platform supports different store domains such as:
+
+* **Flower Store**
+* **Medical Store**
+* **Grocery Store**
+* **Electronics Store**
+
+Users select the store at login, and Admins can switch stores anytime. The system ensures strict tenant isolation, high scalability, and flexible onboarding of new stores.
+
+---
+
+## 🚀 **2. Key Features**
+
+### **🔹 Multi-Tenant Architecture**
+
+* Each store works like an independent ecommerce system.
+* Isolated data: products, orders, customers, inventory.
+* SUPERADMIN controls global settings and store creation.
+* Tenants identified using **storeId** passed through the API Gateway.
+
+### **🔹 Role-Based Access Control**
+
+Roles include:
+
+* **SUPERADMIN** → manages all stores, create admins.
+* **ADMIN** → store management (products, categories, inventory).
+* **CUSTOMER** → browse & purchase items.
+
+Role restrictions:
+
+* Customers see only selected store’s products.
+* Admins can switch stores for management actions.
+
+### **🔹 Scalable Microservice Architecture**
+
+Services included:
+
+1. **API Gateway** – Routing, JWT authentication, storeId propagation
+2. **Eureka Service Discovery** – Registers & locates microservices
+3. **UserService** – Spring Web
+4. **ProductService** – Spring Web
+5. **InventoryService** – Spring Web
+6. **PaymentService** – Spring Web
+7. **OrderService** – Spring WebFlux (high concurrency, non-blocking)
+
+### **🔹 Centralized Authentication**
+
+* Login once → Gateway issues JWT with `storeId` + role.
+* Every service receives tenant mode through headers.
+* Tenant switching is seamless and secure.
+
+### **🔹 Complete Ecommerce Modules**
+
+* Product Catalog
+* Categories
+* Inventory Sync
+* Cart + Checkout
+* Order lifecycle: CREATED → PAID → SHIPPED → DELIVERED
+* Payment workflow (stubbed)
+* Analytics for Admins
+
+### **🔹 Observability & Monitoring**
+
+* **Micrometer** for metrics
+* **Zipkin** for tracing (already configured, works when running multiple nodes)
+
+### **🔹 Frontend**
+
+* Built using **React JSX** with Bootstrap styling.
+* Store selection, product browsing, payments, orders, and admin dashboard.
+
+---
+
+## 🏗️ **3. System Architecture**
+
+### **Microservices Structure**
+
+| Service              | Technology           | Description                             |
+| -------------------- | -------------------- | --------------------------------------- |
+| **API Gateway**      | Spring Cloud Gateway | Central routing, JWT, storeId filtering |
+| **Eureka Server**    | Spring Cloud Netflix | Service registry/discovery              |
+| **UserService**      | Spring Web           | Users, roles, authentication            |
+| **ProductService**   | Spring Web           | Products, categories                    |
+| **InventoryService** | Spring Web           | Stock management                        |
+| **OrderService**     | Spring WebFlux       | High-performance order placement        |
+| **PaymentService**   | Spring Web           | Payment handling                        |
+| **Frontend**         | React JSX, Bootstrap | Client UI for customer + admin          |
+
+### **Service-to-Service Communication**
+
+All inter-service calls use:
+
+* **Spring WebClient**
+* Load-balanced with Eureka discovery
+* Non-blocking where required (OrderService)
+
+---
+
+## 🗂️ **4. Data Isolation Strategy**
+
+### **Tenant Identification**
+
+* Each request carries **storeId** from JWT → Gateway → Services.
+* Every service applies `WHERE store_id = ?` rules.
+* Product lists, inventory counts, orders, and users are per-tenant.
+
+### **Database Layer**
+
+* Shared schema with tenant column
+  OR
+* Table-per-tenant (configurable)
+
+Current implementation uses **tenant column strategy**.
+
+---
+
+## 📦 **5. Backend Flow Summary (Dec 1–9 Implementation)**
+
+### ✔ Multi-Tenant Setup (Dec 1–3)
+
+* Completed GLOBAL customer model.
+* Finalized storeId injection into JWT.
+* Superadmin, admin, customer roles implemented.
+* Created role endpoint `/admin/roles`.
+
+### ✔ Product & Inventory Enhancements (Dec 6)
+
+* Added 35+ products per store through `data-extra.sql`.
+* Category fixes and optimized product models.
+
+### ✔ Order Service (Dec 7–8)
+
+* WebFlux implementation for reactive performance.
+* Inventory reservation logic connected.
+* Payment workflow stub added.
+
+### ✔ Frontend Admin Analytics (Dec 8–9)
+
+* React admin dashboard created.
+* Date-range selector.
+* Store analytics API connected.
+
+### ✔ Postman + Gateway Fixes (Dec 3–4)
+
+* Full Postman collection generated.
+* Fixed path issues with API Gateway (8086).
+
+---
+
+## 🎨 **6. Frontend Features**
+
+### Customer UI
+
+* Store selection on login
+* Homepage with categories
+* Product listing
+* Product details
+* Cart system
+* Checkout
+* Order tracking
+* Order history
+
+### Admin UI
+
+* Store switcher
+* Manage products
+* Manage inventory
+* View analytics
+* Orders overview
+* Add/update/delete items
+
+Built using:
+
+* **React JSX**
+* **Bootstrap 5**
+* **Axios client with Gateway**
+
+---
+
+## 🧪 **7. Testing & Tools**
+
+* **Postman** collection for all endpoints
+* **Spring Boot Test** (unit + integration tests)
+* **MockMvc** for controller layer
+* **H2 / MySQL** for dev database options
+
+---
+
+## 🧩 **8. Deployment Model**
+
+Supports:
+
+* Dockerized microservices
+* Horizontal scaling
+* New tenant onboarding in seconds (insert store config + seed data)
+
+Multi-cloud friendly:
+
+* AWS / GCP / Azure
+* Kubernetes ready
+
+---
+
+## 📘 **9. Conclusion**
+
+This multi-tenant ecommerce system is designed for **performance, security, and scalability**, supporting different store domains under one ecosystem. With strong isolation, role-based control, microservices, reactive order processing, and a fully functional React frontend, the platform is ready for real-world expansion and business onboarding.
+
+---
+ 

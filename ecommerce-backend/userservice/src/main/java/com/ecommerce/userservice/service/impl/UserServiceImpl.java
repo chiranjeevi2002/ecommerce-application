@@ -1,0 +1,153 @@
+package com.ecommerce.userservice.service.impl;
+
+import com.ecommerce.common.security.Role;
+import com.ecommerce.common.security.UserRoles;
+import com.ecommerce.userservice.dto.JwtResponse;
+import com.ecommerce.userservice.dto.LoginRequest;
+import com.ecommerce.userservice.dto.RegisterRequest;
+import com.ecommerce.userservice.dto.UserResponse;
+import com.ecommerce.userservice.model.User;
+import com.ecommerce.userservice.repository.RoleRepository;
+import com.ecommerce.userservice.repository.UserRepository;
+import com.ecommerce.userservice.service.UserService;
+import com.ecommerce.userservice.util.JwtUtil;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Service
+@Transactional
+public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+
+    public UserServiceImpl(UserRepository userRepository,
+                           RoleRepository roleRepository,
+                           PasswordEncoder passwordEncoder,
+                           JwtUtil jwtUtil) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
+    }
+
+    @Override
+    public UserResponse register(RegisterRequest request) {
+
+        if (userRepository.existsByUsername(request.username())) {
+            throw new IllegalStateException("Username already exists");
+        }
+
+        if (userRepository.existsByEmail(request.email())) {
+            throw new IllegalStateException("Email already exists");
+        }
+
+        User user = new User();
+        user.setUsername(request.username());
+        user.setEmail(request.email());
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setStoreId(request.storeId());
+
+        Set<String> authorities =
+                request.roles() == null || request.roles().isEmpty()
+                        ? Set.of(UserRoles.DEFAULT)
+                        : request.roles()
+                              .stream()
+                              .map(this::validateAuthority)
+                              .collect(Collectors.toSet());
+
+        user.setRoles(
+                authorities.stream()
+                        .map(this::resolveDbRole)
+                        .collect(Collectors.toSet())
+        );
+
+        return mapToResponse(userRepository.save(user));
+    }
+
+    @Override
+    public JwtResponse login(LoginRequest request) {
+
+        User user = userRepository.findByUsername(request.username())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid username or password"));
+
+        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+            throw new IllegalArgumentException("Invalid username or password");
+        }
+
+        Set<String> authorities = user.getRoles()
+                .stream()
+                .map(com.ecommerce.userservice.model.Role::getName)
+                .collect(Collectors.toSet());
+
+//        FIXME remove storeId later 
+          Long storeId = 211l;
+        String token = jwtUtil.generateToken(
+                user.getId(),
+                storeId,
+                user.getUsername(),
+                authorities
+        );
+
+        return new JwtResponse(
+                token,
+                "Bearer",
+                jwtUtil.getExpirationMillis(),
+                user.getStoreId(),
+                user.getId(),
+                user.getUsername(),
+                authorities
+        );
+    }
+
+    @Override
+    public UserResponse getByUserIdAndStoreId(Long userId, Long storeId) {
+
+        User user = userRepository.findByIdAndStoreId(userId, storeId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found for this store"));
+
+        return mapToResponse(user);
+    }
+
+    private String validateAuthority(String authority) {
+
+        String roleName = authority.startsWith("ROLE_")
+                ? authority.substring(5)
+                : authority;
+
+        Role.valueOf(roleName);
+
+        return Role.valueOf(roleName).authority();
+    }
+
+    private com.ecommerce.userservice.model.Role resolveDbRole(String authority) {
+
+        return roleRepository.findByName(authority)
+                .orElseGet(() ->
+                        roleRepository.save(
+                                new com.ecommerce.userservice.model.Role(null, authority)
+                        ));
+    }
+
+    private UserResponse mapToResponse(User user) {
+
+        Set<String> roles = user.getRoles()
+                .stream()
+                .map(com.ecommerce.userservice.model.Role::getName)
+                .collect(Collectors.toSet());
+
+        return new UserResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getStoreId(),
+                roles
+        );
+    }
+}

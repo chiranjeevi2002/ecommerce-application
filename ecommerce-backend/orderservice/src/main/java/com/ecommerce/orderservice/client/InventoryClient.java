@@ -1,0 +1,16 @@
+package com.ecommerce.orderservice.client;
+
+import com.ecommerce.orderservice.dto.InventoryReserveRequest;
+import com.ecommerce.orderservice.dto.InventoryReserveResponse;
+import com.ecommerce.orderservice.dto.InventoryResponse;
+
+import reactor.core.publisher.Mono;
+
+public interface InventoryClient {
+
+    Mono<InventoryResponse> decrease(Long productId, Integer quantity, Long storeId);
+
+    Mono<InventoryResponse> increase(Long productId, Integer quantity, Long storeId);
+    
+    Mono<InventoryReserveResponse> reserve(InventoryReserveRequest request);
+}

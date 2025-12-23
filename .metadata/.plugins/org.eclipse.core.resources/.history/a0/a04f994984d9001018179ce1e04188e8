@@ -1,0 +1,176 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: apigateway
+
+  cloud:
+    gateway:
+
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - http://localhost:5173
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - Authorization
+              - Content-Type
+              - X-User-Id
+              - X-User-Name
+              - X-User-Roles
+              - X-Store-Id
+            allowCredentials: true
+
+      routes:
+        - id: userservice-auth
+          uri: lb://USERSERVICE
+          predicates:
+            - Path=/api/v1/auth/**
+
+        - id: productservice
+          uri: lb://PRODUCTSERVICE
+          predicates:
+            - Path=/api/v1/products/**,/api/v1/admin/**
+
+        - id: productservice-uploads
+          uri: lb://PRODUCTSERVICE
+          predicates:
+            - Path=/uploads/**
+
+        # =========================
+        # ORDER SERVICE
+        # =========================
+        - id: orderservice
+          uri: lb://ORDERSERVICE
+          predicates:
+            - Path=/api/v1/orders/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: orderserviceCB
+                fallbackUri: forward:/gateway-fallback
+
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 20
+                redis-rate-limiter.burstCapacity: 40
+
+        # =========================
+        # INVENTORY SERVICE
+        # =========================
+        - id: inventoryservice
+          uri: lb://INVENTORYSERVICE
+          predicates:
+            - Path=/api/v1/inventory/**
+
+        # =========================
+        # PAYMENT SERVICE
+        # =========================
+        - id: paymentservice
+          uri: lb://PAYMENTSERVICE
+          predicates:
+            - Path=/api/v1/payments/**
+
+        # =========================
+        # OPENAPI AGGREGATION
+        # =========================
+        - id: userservice-openapi
+          uri: lb://USERSERVICE
+          predicates:
+            - Path=/v3/api-docs/userservice/**
+          filters:
+            - RewritePath=/v3/api-docs/userservice(?<segment>/.*|), /v3/api-docs${segment}
+
+        - id: productservice-openapi
+          uri: lb://PRODUCTSERVICE
+          predicates:
+            - Path=/v3/api-docs/productservice/**
+          filters:
+            - RewritePath=/v3/api-docs/productservice(?<segment>/.*|), /v3/api-docs${segment}
+
+        - id: orderservice-openapi
+          uri: lb://ORDERSERVICE
+          predicates:
+            - Path=/v3/api-docs/orderservice/**
+          filters:
+            - RewritePath=/v3/api-docs/orderservice(?<segment>/.*|), /v3/api-docs${segment}
+
+        - id: inventoryservice-openapi
+          uri: lb://INVENTORYSERVICE
+          predicates:
+            - Path=/v3/api-docs/inventoryservice/**
+          filters:
+            - RewritePath=/v3/api-docs/inventoryservice(?<segment>/.*|), /v3/api-docs${segment}
+
+        - id: paymentservice-openapi
+          uri: lb://PAYMENTSERVICE
+          predicates:
+            - Path=/v3/api-docs/paymentservice/**
+          filters:
+            - RewritePath=/v3/api-docs/paymentservice(?<segment>/.*|), /v3/api-docs${segment}
+
+# =========================
+# JWT CONFIG
+# =========================
+jwt:
+  secret-base64: "vVkNwgLCuunJto86RZveCtNr/HvBEFkpuT13zUNNjhQ="
+  expiration-millis: 3600000
+  issuer: ecommerce-backend
+
+# =========================
+# EUREKA
+# =========================
+eureka:
+  client:
+    enabled: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+
+# =========================
+# ACTUATOR & TRACING
+# =========================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+
+  zipkin:
+    tracing:
+      enabled: false
+
+# =========================
+# SWAGGER UI (Gateway)
+# =========================
+springdoc:
+  swagger-ui:
+    path: /api/v1/docs
+    urls:
+      - name: Userservice
+        url: /v3/api-docs/userservice
+      - name: Productservice
+        url: /v3/api-docs/productservice
+      - name: Orderservice
+        url: /v3/api-docs/orderservice
+      - name: Inventoryservice
+        url: /v3/api-docs/inventoryservice
+      - name: Paymentservice
+        url: /v3/api-docs/paymentservice

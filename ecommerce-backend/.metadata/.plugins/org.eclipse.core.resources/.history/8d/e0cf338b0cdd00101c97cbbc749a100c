@@ -1,0 +1,5 @@
+package com.ecommerce.common.workflow;
+
+public enum OrderWorkflowStep {
+
+}

@@ -1,0 +1,21 @@
+package com.ecommerce.apigateway.constants;
+
+public final class GatewayMessages {
+
+	private GatewayMessages() {
+	}
+
+	public static final String SERVICE_UNAVAILABLE = "Service temporarily unavailable. Please try again later.";
+
+	public static final String RATE_LIMITED = "Too many requests. Please slow down.";
+
+	public static final String TIMEOUT = "The request timed out.";
+
+	public static final String CIRCUIT_OPEN = "Service temporarily disabled due to failures.";
+
+	public static final String JWT_INVALID = "Invalid JWT token.";
+
+	public static final String JWT_MISSING = "Authorization header or Bearer token missing.";
+
+	public static final String BAD_REQUEST = "The request could not be processed due to invalid data.";
+}

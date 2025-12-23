@@ -1,0 +1,76 @@
+package com.ecommerce.common.workflow;
+
+
+/**
+ * Defines the ordered business steps involved in the Order workflow.
+ *
+ * <p>
+ * This enum represents the canonical workflow language for Order processing.
+ * It is intentionally placed in <b>common-core</b> so it can be reused across:
+ * <ul>
+ *   <li>Order workflow orchestration</li>
+ *   <li>Saga compensation logic</li>
+ *   <li>Audit and application logging</li>
+ *   <li>Metrics and distributed tracing</li>
+ *   <li>Outbox / event publishing</li>
+ * </ul>
+ *
+ * <p>
+ * <b>Design rules:</b>
+ * <ul>
+ *   <li>Do NOT use hard-coded strings for workflow steps</li>
+ *   <li>Always reference steps using this enum</li>
+ *   <li>Any change here is automatically reflected system-wide</li>
+ * </ul>
+ *
+ * <p>
+ * The {@link #toString()} method is intentionally overridden to return
+ * {@link #name()} so that enum values remain stable, human-readable,
+ * and safe for logs and external systems.
+ */
+public enum OrderWorkflowStep {
+
+    /**
+     * Creates the Order aggregate in the database.
+     *
+     * <p>
+     * This is the first step in the workflow and typically results
+     * in an Order with status {@code PENDING}.
+     */
+    CREATE_ORDER,
+
+    /**
+     * Reserves (decreases) inventory for all items in the Order.
+     *
+     * <p>
+     * This step ensures stock availability before initiating payment.
+     * On failure, previously created Order data may require compensation.
+     */
+    RESERVE_INVENTORY,
+
+    /**
+     * Initiates the payment process for the Order.
+     *
+     * <p>
+     * This step communicates with the Payment service and usually
+     * transitions the Order into a {@code PAYMENT_PENDING} state.
+     */
+    INITIATE_PAYMENT;
+
+    /**
+     * Returns a stable, human-readable identifier for this workflow step.
+     *
+     * <p>
+     * We deliberately return {@link #name()} to avoid:
+     * <ul>
+     *   <li>Duplicate mapping methods (e.g. code())</li>
+     *   <li>Hidden string constants</li>
+     *   <li>Refactoring risks</li>
+     * </ul>
+     */
+    @Override
+    public String toString() {
+        return name();
+    }
+}
+

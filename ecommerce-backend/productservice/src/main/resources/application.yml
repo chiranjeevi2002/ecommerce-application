@@ -1,0 +1,77 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: productservice
+  output:
+    ansi:
+      enabled: ALWAYS
+  datasource:
+#    url: jdbc:h2:mem:productsdb
+    url: jdbc:h2:file:D:/workspace/services/ecommerce/ecommerce-backend/main;AUTO_SERVER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  sql:
+    init:
+      mode: always
+      continue-on-error: true
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,beans,env
+  endpoint:
+    health:
+      show-details: always
+
+info:
+  app:
+    name: Product Service
+    version: 1.0.0
+    team: Backend Team
+    description: >
+      This microservice manages all product-related operations.
+      It handles CRUD operations, inventory updates, and product catalog queries.
+
+logging:
+  file:
+    name: logs/productservice.log
+  pattern:
+    console: "%clr([%d{yyyy-MM-dd HH:mm:ss}]){faint} %clr([%-5level]){blue} %clr([%X{service}]){green} %clr([%logger{36}:%L]){cyan} - %clr(%msg){bright_white}%n"
+    file: "[%d{yyyy-MM-dd HH:mm:ss}] [%-5level] [%X{service}] [%logger{36}:%L] - %msg%n"
+  level:
+    root: INFO
+    com.ecommerce.product: DEBUG
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+    unregister-on-shutdown: false
+    healthcheck:
+      enabled: true
+
+  instance:
+    prefer-ip-address: true
+    # hostname: localhost
+    # ip-address: 127.0.0.1
+    instance-id: ${spring.application.name}:${server.port}
+    # lease-renewal-interval-in-seconds: 2    # heartbeat every 10s
+    # lease-expiration-duration-in-seconds: 5
+
+springdoc:
+  swagger-ui:
+    enabled: false   # UI disabled at each service
+  api-docs:
+    path: /v3/api-docs  

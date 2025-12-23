@@ -1,0 +1,12 @@
+package com.ecommerce.orderservice.dto;
+
+import java.util.List;
+
+
+public record ProductValidationResult(
+        Long storeId,
+        List<Long> requestedProductIds,
+        List<Long> validProductIds,
+        List<Long> invalidProductIds,
+        boolean valid
+) {}

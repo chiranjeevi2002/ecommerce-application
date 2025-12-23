@@ -1,0 +1,75 @@
+package com.ecommerce.orderservice.service.workflow;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.ecommerce.common.core.workflow.OrderWorkflowStep;
+
+public final class WorkflowLogger {
+
+    private static final Logger log =
+            LoggerFactory.getLogger("ORDER_WORKFLOW");
+
+    private WorkflowLogger() {
+    }
+
+    public static void stepStarted(
+            OrderWorkflowStep step,
+            WorkflowContext context
+    ) {
+        log.info(
+                "workflow_step_started step={} orderId={} storeId={} traceId={}",
+                step,
+                safeOrderId(context),
+                context.storeId(),
+                context.traceId()
+        );
+    }
+
+    public static void stepCompleted(
+            OrderWorkflowStep step,
+            WorkflowContext context
+    ) {
+        log.info(
+                "workflow_step_completed step={} orderId={} storeId={} traceId={}",
+                step,
+                safeOrderId(context),
+                context.storeId(),
+                context.traceId()
+        );
+    }
+
+    public static void stepFailed(
+            OrderWorkflowStep step,
+            WorkflowContext context,
+            Throwable error
+    ) {
+        log.error(
+                "workflow_step_failed step={} orderId={} storeId={} traceId={} reason={}",
+                step,
+                safeOrderId(context),
+                context.storeId(),
+                context.traceId(),
+                error.getMessage()
+        );
+    }
+
+    public static void stepCompensated(
+            OrderWorkflowStep step,
+            WorkflowContext context
+    ) {
+        log.warn(
+                "workflow_step_compensated step={} orderId={} storeId={} traceId={}",
+                step,
+                safeOrderId(context),
+                context.storeId(),
+                context.traceId()
+        );
+    }
+
+    private static Long safeOrderId(WorkflowContext context) {
+        return context.order() != null
+                ? context.order().getId()
+                : null;
+    }
+}

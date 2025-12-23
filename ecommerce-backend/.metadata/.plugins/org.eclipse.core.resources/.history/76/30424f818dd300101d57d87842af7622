@@ -1,0 +1,16 @@
+file.upload-dir=uploads
+spring.web.resources.static-locations=file:uploads/
+
+spring.mvc.static-path-pattern=/uploads/**
+
+#below to auto run sql file 
+spring.sql.init.mode=always
+spring.jpa.defer-datasource-initialization=true
+#above to auto run sql file 
+
+management.tracing.enabled=false
+management.zipkin.enabled=false
+management.zipkin.tracing.endpoint=
+
+spring.web.resources.static-locations=file:uploads/
+

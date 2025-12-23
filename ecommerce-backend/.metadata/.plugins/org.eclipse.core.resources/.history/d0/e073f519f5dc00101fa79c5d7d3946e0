@@ -1,0 +1,5 @@
+package com.ecommerce.common.web.feign;
+
+public class FeignBaseConfig {
+
+}

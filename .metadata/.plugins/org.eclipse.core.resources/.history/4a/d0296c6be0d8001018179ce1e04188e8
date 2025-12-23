@@ -1,0 +1,59 @@
+package com.ecommerce.userservice.config;
+
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.ecommerce.productservice.security.HeaderAuthFilter;
+import com.ecommerce.userservice.security.JwtAuthenticationFilter;
+
+import lombok.RequiredArgsConstructor;
+
+@Configuration
+@EnableMethodSecurity(prePostEnabled = true)
+public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtFilter) {
+        this.jwtFilter = jwtFilter;
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        http
+            .csrf(csrf -> csrf.disable()) // Disable CSRF for REST API
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/authservice/**").permitAll()
+                .requestMatchers("/productservice/products/**").permitAll()
+                .requestMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPERADMIN")
+                .anyRequest().authenticated()
+            )
+
+            // Add JWT filter before UsernamePasswordAuthenticationFilter
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+
+            // Basic Framework config
+            .httpBasic(Customizer.withDefaults());
+
+        return http.build();
+    }
+
+    // Authentication manager (required for login)
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    
+}

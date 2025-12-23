@@ -1,0 +1,140 @@
+package com.ecommerce.userservice.service.impl;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ecommerce.userservice.dto.JwtResponse;
+import com.ecommerce.userservice.dto.LoginRequest;
+import com.ecommerce.userservice.dto.RegisterRequest;
+import com.ecommerce.userservice.dto.UserResponse;
+import com.ecommerce.userservice.model.Role;
+import com.ecommerce.userservice.model.User;
+import com.ecommerce.userservice.repository.RoleRepository;
+import com.ecommerce.userservice.repository.UserRepository;
+import com.ecommerce.userservice.service.UserService;
+import com.ecommerce.userservice.util.JwtUtil;
+
+@Service
+@Transactional
+public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+
+    public UserServiceImpl(UserRepository userRepository,
+                           RoleRepository roleRepository,
+                           PasswordEncoder passwordEncoder,
+                           JwtUtil jwtUtil) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
+    }
+    
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+
+    @Override
+    public UserResponse register(RegisterRequest req) {
+
+        if (userRepository.existsByUsername(req.username())) {
+            throw new IllegalArgumentException("Username already taken");
+        }
+        if (userRepository.existsByEmail(req.email())) {
+            throw new IllegalArgumentException("Email already in use");
+        }
+
+        User user = new User();
+        user.setUsername(req.username());
+        user.setEmail(req.email());
+         
+        log.info("superadmin123 ::{}",passwordEncoder.encode("superadmin123"));
+        log.info("admin123      ::{}",passwordEncoder.encode("admin123"));
+        log.info("customer123   ::{}",passwordEncoder.encode("customer123"));
+        user.setPassword(passwordEncoder.encode(req.password()));
+        user.setStoreId(req.storeId());
+
+        Set<Role> roles = new HashSet<>();
+
+        if (req.roles() == null || req.roles().isEmpty()) {
+            Role defaultRole = roleRepository.findByName("ROLE_USER")
+                    .orElseGet(() -> roleRepository.save(new Role(null, "ROLE_USER")));
+            roles.add(defaultRole);
+        } else {
+            for (String r : req.roles()) {
+                Role role = roleRepository.findByName(r)
+                        .orElseGet(() -> roleRepository.save(new Role(null, r)));
+                roles.add(role);
+            }
+        }
+
+        user.setRoles(roles);
+        User saved = userRepository.save(user);
+
+        return mappertoResponse(saved);
+    }
+
+    @Override
+    public JwtResponse login(LoginRequest req) {
+        User user = userRepository.findByUsername(req.username())
+                .orElseThrow(() -> new IllegalArgumentException(
+                		 "No user found with the provided username: %s".formatted(req.username())
+                		));
+
+        if (!passwordEncoder.matches(req.password(), user.getPassword())) {
+            throw new IllegalArgumentException("The password you entered is incorrect. Please try again.");
+        }
+
+        Set<String> roleNames = user.getRoles()
+                .stream()
+                .map(Role::getName)
+                .collect(Collectors.toSet());
+
+        String token = jwtUtil.generateToken(
+                user.getId(),
+                user.getStoreId(),
+                user.getUsername(),
+                roleNames
+        );
+        
+        return new JwtResponse(
+        		token, 
+        		"Bearer", 
+        		jwtUtil.getExpirationMillis(), 
+        		user.getStoreId(),
+        		user.getId(),
+                user.getUsername(),
+                roleNames);
+    }
+
+//    @Override
+//    public UserResponse getByUsername(String username) {
+//        User user = userRepository.findByUsername(username)
+//                .orElseThrow(() -> new NoSuchElementException("User not found"));
+//        return mapper(user);
+//    }
+    
+    @Override
+    public UserResponse getByUserIdAndStoreId(Long userId, Long storeId) {
+        User user = userRepository.findByIdAndStoreId(userId, storeId)
+                .orElseThrow(() -> new RuntimeException("User not found for this store"));
+        return mappertoResponse(user);
+    }
+
+    private UserResponse mappertoResponse(User u) {
+        Set<String> roleNames = u.getRoles()
+                .stream()
+                .map(Role::getName)
+                .collect(Collectors.toSet());
+        
+        return new UserResponse(u.getId(), u.getUsername(), u.getEmail(), u.getStoreId(), roleNames);
+    }
+}

@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: userservice
+
+logging:
+  level:
+    com.ecommerce.user: DEBUG

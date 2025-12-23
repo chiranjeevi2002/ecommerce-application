@@ -1,0 +1,60 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: orderservice
+  output:
+    ansi:
+      enabled: ALWAYS
+  profiles:
+    active: local
+  datasource:
+#    url: jdbc:h2:mem:ordersdb
+    url: jdbc:h2:file:D:/workspace/services/ecommerce/ecommerce-backend/main;AUTO_SERVER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+logging:
+  file:
+    name: logs/orderservice.log
+  pattern:
+    console: "%clr([%d{yyyy-MM-dd HH:mm:ss}]){faint} %clr([%-5level]){blue} %clr([%X{service}]){green} %clr([%logger{36}:%L]){cyan} - %clr(%msg){bright_white}%n"
+    file: "[%d{yyyy-MM-dd HH:mm:ss}] [%-5level] [%X{service}] [%logger{36}:%L] - %msg%n"
+  level:
+    root: INFO
+    '[com.ecommerce.orderservice]': DEBUG
+    
+    '[org.springframework.web.reactive.function.client]': DEBUG
+    '[org.springframework.cloud.loadbalancer.core]': INFO
+    
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      webclient:
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+springdoc:
+  swagger-ui:
+    enabled: false   # UI disabled at each service
+  api-docs:
+    path: /v3/api-docs			

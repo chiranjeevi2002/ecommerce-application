@@ -1,0 +1,7 @@
+package com.ecommerce.common.web.exception;
+
+public record ApiError(
+        String message,
+        String errorCode,
+        Instant timestamp
+) {}

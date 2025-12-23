@@ -1,0 +1,28 @@
+package com.ecommerce.common.webflux.webclient;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.client.ClientRequest;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import com.ecommerce.common.webflux.context.ReactiveContextHolder;
+
+@Configuration
+public class WebClientFactory {
+
+    @Bean
+    public WebClient webClient(WebClient.Builder builder) {
+        return builder
+                .filter((request, next) ->
+                        ReactiveContextHolder.get()
+                                .flatMap(ctx -> next.exchange(
+                                        ClientRequest.from(request)
+                                                .header("X-User-Id", String.valueOf(ctx.userId()))
+                                                .header("X-Store-Id", String.valueOf(ctx.storeId()))
+                                                .header("X-User-Name", ctx.username())
+                                                .build()
+                                ))
+                )
+                .build();
+    }
+}

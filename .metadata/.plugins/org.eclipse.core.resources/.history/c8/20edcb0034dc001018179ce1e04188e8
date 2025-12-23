@@ -1,0 +1,6 @@
+package com.ecommerce.inventoryservice.dto;
+
+public record InventoryRollbackRequest(
+        Long productId,
+        Integer quantity
+) {}

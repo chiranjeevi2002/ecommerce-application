@@ -1,0 +1,5 @@
+package com.ecommerce.inventoryservice.service.impl;
+
+public class InventoryRollbackServiceImpl {
+
+}

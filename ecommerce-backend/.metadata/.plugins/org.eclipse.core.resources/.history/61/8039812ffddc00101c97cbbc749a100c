@@ -1,0 +1,5 @@
+package com.ecommerce.common.webflux.exception;
+
+public class GlobalReactiveExceptionHandler {
+    
+}

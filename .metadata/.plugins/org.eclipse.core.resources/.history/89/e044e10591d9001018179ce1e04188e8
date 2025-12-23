@@ -1,0 +1,125 @@
+package com.ecommerce.userservice.service.admin.impl;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ecommerce.userservice.dto.RoleSummary;
+import com.ecommerce.userservice.dto.UserResponse;
+import com.ecommerce.userservice.dto.UserRoleUpdateRequest;
+import com.ecommerce.userservice.exception.BadRequestException;
+import com.ecommerce.userservice.exception.NotFoundException;
+import com.ecommerce.userservice.model.Role;
+import com.ecommerce.userservice.model.User;
+import com.ecommerce.userservice.repository.RoleRepository;
+import com.ecommerce.userservice.repository.UserRepository;
+import com.ecommerce.userservice.service.admin.UserAdminService;
+
+@Service
+public class UserAdminServiceImpl implements UserAdminService {
+
+    private final UserRepository userRepo;
+    private final RoleRepository roleRepo;
+
+    public UserAdminServiceImpl(UserRepository userRepo, RoleRepository roleRepo) {
+        this.userRepo = userRepo;
+        this.roleRepo = roleRepo;
+    }
+
+    @Override
+    public List<UserResponse> listUsers(Integer page, Integer size, String q, Long storeId) {
+        if (page != null && size != null) {
+            Pageable p = PageRequest.of(Math.max(0, page), Math.max(1, size), Sort.by("id").descending());
+            Page<User> pg;
+            if (q != null && !q.isBlank()) {
+                pg = userRepo.searchByUsernameOrEmail(q, p);
+            } else if (storeId != null) {
+                pg = userRepo.findAllByStoreId(storeId, p);
+            } else {
+                pg = userRepo.findAll(p);
+            }
+            return pg.stream().map(this::toResponse).collect(Collectors.toList());
+        } else {
+            List<User> list;
+            if (q != null && !q.isBlank()) list = userRepo.searchByUsernameOrEmail(q);
+            else if (storeId != null) list = userRepo.findAllByStoreId(storeId);
+            else list = userRepo.findAll();
+            return list.stream().map(this::toResponse).collect(Collectors.toList());
+        }
+    }
+
+    @Override
+    public UserResponse getUser(Long userId) {
+        User u = userRepo.findById(userId).orElseThrow(() -> new NotFoundException("User not found: " + userId));
+        return toResponse(u);
+    }
+
+    
+    @Override
+    @Transactional
+    public UserResponse updateUserRoles(UserRoleUpdateRequest request) {
+
+        if (request.roleIds() == null || request.roleIds().isEmpty()) {
+            throw new BadRequestException("roleIds must not be empty");
+        }
+
+        User user = userRepo.findById(request.userId())
+                .orElseThrow(() -> new NotFoundException("User not found: " + request.userId()));
+
+        if (request.storeId() != null && !Objects.equals(user.getStoreId(), request.storeId())) {
+            throw new BadRequestException("User " + user.getId() + " is not part of store " + request.storeId());
+        }
+
+        Set<Role> newRoles = request.roleIds().stream()
+                .map(id -> roleRepo.findById(id)
+                        .orElseThrow(() -> new BadRequestException("Invalid role id: " + id)))
+                .collect(Collectors.toSet());
+
+        boolean targetHasSuperAdmin = newRoles.stream()
+                .anyMatch(role -> role.getName().equals("ROLE_SUPERADMIN"));
+
+        if (targetHasSuperAdmin && !currentUserIsSuperAdmin()) {
+            throw new AccessDeniedException("Only SUPERADMIN can assign SUPERADMIN role");
+        }
+
+        user.setRoles(newRoles);
+        User saved = userRepo.save(user);
+
+        return toResponse(saved);
+    }
+
+    // Add this method at the bottom of class
+    private boolean currentUserIsSuperAdmin() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || auth.getAuthorities() == null) return false;
+
+        return auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_SUPERADMIN"));
+    }
+
+    
+    @Override
+    public List<RoleSummary> listAllRoles() {
+        return roleRepo.findAll(Sort.by("id")).stream()
+                .map(r -> new RoleSummary(r.getId(), r.getName()))
+                .collect(Collectors.toList());
+    }
+
+    private UserResponse toResponse(User u) {
+        Set<String> roleNames = u.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
+        return new UserResponse(u.getId(), u.getUsername(), u.getEmail(), u.getStoreId(), roleNames);
+    }
+}
+
+
