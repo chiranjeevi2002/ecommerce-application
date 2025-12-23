@@ -1,5 +1,0 @@
-package com.ecommerce.orderservice.filter;
-
-public class RequestContextWebFilter {
-
-}

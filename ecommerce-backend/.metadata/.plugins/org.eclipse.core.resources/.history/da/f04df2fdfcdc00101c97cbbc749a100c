@@ -1,5 +1,0 @@
-package com.ecommerce.common.webflux.pagination;
-
-public class PageResponse {
-    
-}

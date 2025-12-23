@@ -1,5 +1,0 @@
-package com.ecommerce.common.web.exception;
-
-public class ApiError {
-
-}

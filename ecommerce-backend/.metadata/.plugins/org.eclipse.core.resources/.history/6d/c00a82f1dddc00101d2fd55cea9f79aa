@@ -1,5 +1,0 @@
-package com.ecommerce.orderservice.context;
-
-public class ReactiveRequestContextHolder {
-
-}

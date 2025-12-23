@@ -1,5 +1,0 @@
-package com.ecommerce.common.webflux.webclient;
-
-public class WebClientMetricsFilter {
-
-}

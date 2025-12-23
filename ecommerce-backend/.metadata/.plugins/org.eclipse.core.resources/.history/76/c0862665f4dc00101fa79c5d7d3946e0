@@ -1,5 +1,0 @@
-package com.ecommerce.common.web.pagination;
-
-public class PageResponse {
-
-}

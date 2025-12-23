@@ -1,7 +1,0 @@
-1764620142480	Rename package 'com.ecommerce.users'
-1764741327364	Rename package 'com.example.userservice'
-1764775869822	Rename method 'map'
-1764776370789	Rename method 'mapper'
-1764936558846	Extract method 'createDumpUser'
-1764942049533	Rename field 'repo'
-1764947924971	Delete element
